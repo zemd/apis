@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 1.0.1
+
+### Patch Changes
+
+- 5ccd640: updating dependency version
+
 ## 1.0.0
 
 ### Major Changes
