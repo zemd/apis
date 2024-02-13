@@ -38,7 +38,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@zemd/http-client": "workspace:*",
+    "@zemd/http-client": "^1.0.0",
     "zod": "^3.22.4"
   }
 }
