@@ -1,0 +1,3 @@
+{
+  "extends": "@zemd/tsconfig/tsconfig-base.json"
+}

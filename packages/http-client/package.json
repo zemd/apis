@@ -1,0 +1,39 @@
+{
+  "name": "@zemd/http-client",
+  "type": "module",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "A lightweight framework to build your custom fetch",
+  "author": {
+    "name": "Dmytro Zelenetskyi",
+    "email": "dmytro.zelenetskyi@gmail.com",
+    "url": "https://codeandgin.co"
+  },
+  "homepage": "https://github.com/zemd/apis/packages/http-client",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zemd/apis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zemd/apis/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@zemd/tsconfig": "^1.2.0",
+    "typescript": "^5.3.3"
+  }
+}
