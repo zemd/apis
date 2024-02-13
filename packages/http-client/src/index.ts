@@ -1,9 +1,6 @@
 export type TFetchFn = typeof fetch;
 export type TFetchFnParams = Parameters<TFetchFn>;
-export type TTransformer = (
-  fetchFn: TFetchFn,
-  ...params: TFetchFnParams
-) => ReturnType<TFetchFn>;
+export type TTransformer = (fetchFn: TFetchFn, ...params: TFetchFnParams) => ReturnType<TFetchFn>;
 
 /**
  * Compose a list of transformers into a single fetch function.
@@ -16,10 +13,7 @@ export type TTransformer = (
  * ], fetch);
  * ```
  */
-export const compose = (
-  transformers: Array<TTransformer>,
-  fetchFn: TFetchFn = fetch
-): TFetchFn => {
+export const compose = (transformers: Array<TTransformer>, fetchFn: TFetchFn = fetch): TFetchFn => {
   return transformers.reduceRight<TFetchFn>((acc, transformer) => {
     const res: TFetchFn = (...params: TFetchFnParams) => {
       return transformer(acc, ...params);
@@ -64,10 +58,7 @@ export const json = (): TTransformer => {
   };
 };
 
-const modifyUrlPath = (
-  input: TFetchFnParams[0],
-  prefix: string
-): TFetchFnParams[0] => {
+const modifyUrlPath = (input: TFetchFnParams[0], prefix: string): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
     urlObj.pathname = `${prefix}${urlObj.pathname}`;
@@ -93,16 +84,10 @@ const modifyUrlPath = (
   return `${prefix}${input}`;
 };
 
-const modifyUrlQuery = (
-  input: TFetchFnParams[0],
-  query: object
-): TFetchFnParams[0] => {
+const modifyUrlQuery = (input: TFetchFnParams[0], query: object): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
-    urlObj.search = `${new URLSearchParams([
-      ...Array.from(urlObj.searchParams.entries()),
-      ...Object.entries(query),
-    ])}`;
+    urlObj.search = `${new URLSearchParams([...Array.from(urlObj.searchParams.entries()), ...Object.entries(query)])}`;
     return new Request(urlObj.toString(), {
       ...input,
     });
@@ -110,28 +95,19 @@ const modifyUrlQuery = (
 
   if (input instanceof URL) {
     const urlObj = new URL(input);
-    urlObj.search = `${new URLSearchParams([
-      ...Array.from(urlObj.searchParams.entries()),
-      ...Object.entries(query),
-    ])}`;
+    urlObj.search = `${new URLSearchParams([...Array.from(urlObj.searchParams.entries()), ...Object.entries(query)])}`;
     return urlObj;
   }
 
   // typeof input === 'string'
   if (URL.canParse(input)) {
     const urlObj = new URL(input);
-    urlObj.search = `${new URLSearchParams([
-      ...Array.from(urlObj.searchParams.entries()),
-      ...Object.entries(query),
-    ])}`;
+    urlObj.search = `${new URLSearchParams([...Array.from(urlObj.searchParams.entries()), ...Object.entries(query)])}`;
     return urlObj.toString();
   }
 
   const [pathname, search] = input.split("?");
-  return `${pathname}?${new URLSearchParams([
-    ...new URLSearchParams(search).entries(),
-    ...Object.entries(query),
-  ])}`;
+  return `${pathname}?${new URLSearchParams([...new URLSearchParams(search).entries(), ...Object.entries(query)])}`;
 };
 
 export const prefix = (value: string): TTransformer => {
@@ -142,10 +118,10 @@ export const prefix = (value: string): TTransformer => {
   };
 };
 
-export const query = (query: object): TTransformer => {
+export const query = (obj: object): TTransformer => {
   return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
-    return fetchFn(modifyUrlQuery(input, query), init);
+    return fetchFn(modifyUrlQuery(input, obj), init);
   };
 };
 
@@ -159,9 +135,7 @@ export const body = (obj: BodyInit): TTransformer => {
   };
 };
 
-export const debug = (
-  fn: Function = (p: any) => console.debug(JSON.stringify(p, null, 4))
-): TTransformer => {
+export const debug = (fn: Function = (p: any) => console.debug(JSON.stringify(p, null, 4))): TTransformer => {
   return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     fn(params);
     return fetchFn(...params);
@@ -172,19 +146,18 @@ export type TEndpointDec = [string, Array<TTransformer>];
 
 export type TEndpointDeclarationFn = (...params: Array<any>) => TEndpointDec;
 
-export type TEndpointResFn<ArgEndpointDeclarationFnParams extends Array<any>> =
-  (...params: ArgEndpointDeclarationFnParams) => Promise<Response>;
+export type TEndpointResFn<ArgEndpointDeclarationFnParams extends Array<any>> = (
+  ...params: ArgEndpointDeclarationFnParams
+) => Promise<Response>;
 
 export const endpoint = <
   ArgEndpointDeclarationFn extends TEndpointDeclarationFn,
   ArgEndpointDeclarationFnParams extends Parameters<ArgEndpointDeclarationFn>,
   ArgResFn extends TEndpointResFn<ArgEndpointDeclarationFnParams>,
 >(
-  fn: ArgEndpointDeclarationFn
+  fn: ArgEndpointDeclarationFn,
 ): ArgResFn => {
-  const res = (
-    ...params: ArgEndpointDeclarationFnParams
-  ): Promise<Response> => {
+  const res = (...params: ArgEndpointDeclarationFnParams): Promise<Response> => {
     const [url, transformers] = fn(...params);
     const fetchFn = compose(transformers, fetch);
     return fetchFn(url);

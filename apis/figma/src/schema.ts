@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-export const IDS = z
-  .string()
-  .or(z.string().array())
-  .transform((value) => {
-    if (Array.isArray(value)) {
-      return value.join(",");
-    }
-    return value;
-  })
-  .pipe(z.string().or(z.string().array()));
+export const ColorProp = z.object({
+  r: z.number().min(0).max(1),
+  g: z.number().min(0).max(1),
+  b: z.number().min(0).max(1),
+  a: z.number().min(0).max(1),
+});
+
+export const VariableAliasProp = z.object({
+  type: z.literal("VARIABLE_ALIAS"),
+  id: z.string(),
+});

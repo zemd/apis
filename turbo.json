@@ -3,7 +3,6 @@
   "globalDependencies": ["**/.env.*local"],
   "pipeline": {
     "build": {
-      "passThroughEnv": ["FIGMA_URL"],
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },

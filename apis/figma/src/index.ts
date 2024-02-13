@@ -21,17 +21,19 @@ import {
   type TTransformer,
 } from "@zemd/http-client";
 
-const FIGMA_URL = process.env["FIGMA_URL"] || "https://api.figma.com/v1";
-
 export const figmaToken = (value: string): TTransformer => {
   return header("X-Figma-Token", value);
 };
 
-export const figma = (accessToken: string, opts?: { debug?: boolean }) => {
+export const figma = (accessToken: string, opts?: { debug?: boolean; url?: string }) => {
   const build = <ArgFn extends TEndpointDeclarationFn, ArgFnParams extends Parameters<ArgFn>>(
     fn: ArgFn,
   ): TEndpointResFn<ArgFnParams> => {
-    const globalTransformers: Array<TTransformer> = [prefix(FIGMA_URL), json(), figmaToken(accessToken)];
+    const globalTransformers: Array<TTransformer> = [
+      prefix(opts?.url ?? "https://api.figma.com/v1"),
+      json(),
+      figmaToken(accessToken),
+    ];
 
     if (opts?.debug === true) {
       globalTransformers.push(debug());

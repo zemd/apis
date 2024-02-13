@@ -1,16 +1,26 @@
 import { z } from "zod";
 import { body, method, type TEndpointDec } from "@zemd/http-client";
 
+const WebhookV2Event = z.enum([
+  "FILE_UPDATE",
+  "FILE_DELETE",
+  "FILE_VERSION_UPDATE",
+  "LIBRARY_PUBLISH",
+  "FILE_COMMENT",
+  "FILE_DELETE",
+]);
+const WebhookV2Status = z.enum(["ACTIVE", "PAUSED"]);
+
 export const PostWebhooksBodySchema = z.object({
-  event_type: z.string(), // WebhookV2Event
+  event_type: WebhookV2Event,
   team_id: z.string(),
   endpoint: z.string(),
   passcode: z.string(),
-  status: z.string().optional(), // WebhookV2Status
+  status: WebhookV2Status.optional(),
   description: z.string().optional(),
 });
 
-export type PostWebhooksBody = z.infer<typeof PostWebhooksBodySchema>;
+export interface PostWebhooksBody extends z.infer<typeof PostWebhooksBodySchema> {}
 
 /**
  * Create a new webhook which will call the specified endpoint when
@@ -20,7 +30,7 @@ export type PostWebhooksBody = z.infer<typeof PostWebhooksBodySchema>;
  * status to PAUSED and reactivate it later.
  */
 export const postWebhooks = (obj: PostWebhooksBody): TEndpointDec => {
-  return [`/v2/webhooks`, [method("POST"), body(JSON.stringify(obj))]];
+  return [`/v2/webhooks`, [method("POST"), body(JSON.stringify(PostWebhooksBodySchema.passthrough().parse(obj)))]];
 };
 
 /**
@@ -31,25 +41,22 @@ export const getWebhooks = (webhookId: string): TEndpointDec => {
 };
 
 export const PutWebhooksBodySchema = z.object({
-  event_type: z.string().optional(), // WebhookV2Event
+  event_type: WebhookV2Event.optional(),
   endpoint: z.string().optional(),
   passcode: z.string().optional(),
-  status: z.string().optional(), // WebhookStatus
+  status: WebhookV2Status.optional(),
   description: z.string().optional(),
 });
 
-export type PutWebhooksBody = z.infer<typeof PutWebhooksBodySchema>;
+export interface PutWebhooksBody extends z.infer<typeof PutWebhooksBodySchema> {}
 
 /**
  * Updates the webhook with the specified properties.
  */
-export const putWebhooks = (
-  webhookId: string,
-  obj?: PutWebhooksBody
-): TEndpointDec => {
+export const putWebhooks = (webhookId: string, obj?: PutWebhooksBody): TEndpointDec => {
   const transformers = [method("PUT")];
   if (obj) {
-    transformers.push(body(JSON.stringify(obj)));
+    transformers.push(body(JSON.stringify(PutWebhooksBodySchema.passthrough().parse(obj))));
   }
   return [`/v2/webhooks/${webhookId}`, transformers];
 };
@@ -74,4 +81,3 @@ export const getTeamWebhooks = (teamId: string): TEndpointDec => {
 export const getWebhooksRequests = (webhookId: string): TEndpointDec => {
   return [`/v2/webhooks/${webhookId}/requests`, [method("GET")]];
 };
-

@@ -1,22 +1,19 @@
 import { z } from "zod";
 import { method, query, type TEndpointDec } from "@zemd/http-client";
 
-export const GetTeamComponentsQuerySchema = z.object({
+export const PaginationQuerySchema = z.object({
   page_size: z.number().optional(),
   after: z.number().optional(),
   before: z.number().optional(),
 });
 
-export type GetTeamComponents = z.infer<typeof GetTeamComponentsQuerySchema>;
+export interface GetTeamComponentsQuery extends z.infer<typeof PaginationQuerySchema> {}
 
 /**
  * Get a paginated list of published components within a team library
  */
-export const getTeamComponents = (
-  teamId: string,
-  options: GetTeamComponents
-): TEndpointDec => {
-  return [`/v1/teams/${teamId}/components`, [method("GET"), query(options)]];
+export const getTeamComponents = (teamId: string, options: GetTeamComponentsQuery): TEndpointDec => {
+  return [`/v1/teams/${teamId}/components`, [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))]];
 };
 
 /**
@@ -33,16 +30,14 @@ export const getComponent = (key: string): TEndpointDec => {
   return [`/v1/components/${key}`, [method("GET")]];
 };
 
+export interface GetTeamComponentSetsQuery extends z.infer<typeof PaginationQuerySchema> {}
 /**
  * Get a paginated list of published component sets within a team library
  */
-export const getTeamComponentSets = (
-  teamId: string,
-  options: GetTeamComponents
-): TEndpointDec => {
+export const getTeamComponentSets = (teamId: string, options: GetTeamComponentSetsQuery): TEndpointDec => {
   return [
     `/v1/teams/${teamId}/component_sets`,
-    [method("GET"), query(options)],
+    [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))],
   ];
 };
 
@@ -60,14 +55,13 @@ export const getComponentSet = (key: string): TEndpointDec => {
   return [`/v1/component_sets/${key}`, [method("GET")]];
 };
 
+export interface GetTeamStylesQuery extends z.infer<typeof PaginationQuerySchema> {}
+
 /**
  * Get a paginated list of published styles within a team library
  */
-export const getTeamStyles = (
-  teamId: string,
-  options: GetTeamComponents
-): TEndpointDec => {
-  return [`/v1/teams/${teamId}/styles`, [method("GET"), query(options)]];
+export const getTeamStyles = (teamId: string, options: GetTeamStylesQuery): TEndpointDec => {
+  return [`/v1/teams/${teamId}/styles`, [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))]];
 };
 
 /**
@@ -83,4 +77,3 @@ export const getFileStyles = (key: string): TEndpointDec => {
 export const getStyle = (key: string): TEndpointDec => {
   return [`/v1/styles/${key}`, [method("GET")]];
 };
-
