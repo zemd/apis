@@ -1,0 +1,44 @@
+{
+  "name": "@zemd/flickr-rest-api",
+  "type": "module",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "description": "Flickr API client simplified.",
+  "author": {
+    "name": "Dmytro Zelenetskyi",
+    "email": "dmytro.zelenetskyi@gmail.com",
+    "url": "https://codeandgin.co"
+  },
+  "homepage": "https://github.com/zemd/apis/apis/flickr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zemd/apis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zemd/apis/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@zemd/tsconfig": "^1.2.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@zemd/http-client": "^1.0.0",
+    "zod": "^3.22.4"
+  }
+}
