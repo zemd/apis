@@ -2,6 +2,8 @@
 
 This is a Flickr API implementation for javascript projects.
 
+**WARNING**: This is a work in progress and not all API methods are implemented yet.
+
 ## Installation
 
 ```sh
