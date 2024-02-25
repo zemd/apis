@@ -5,10 +5,10 @@ This is a Flickr API implementation for javascript projects.
 ## Installation
 
 ```sh
-bun install @zemd/flickr-rest-api
+bun add @zemd/flickr-rest-api
 npm install @zemd/flickr-rest-api
-yarn install @zemd/flickr-rest-api
-pnpm install @zemd/flickr-rest-api
+yarn add @zemd/flickr-rest-api
+pnpm add @zemd/flickr-rest-api
 ```
 
 ## Usage
@@ -20,6 +20,52 @@ const client = figma("your-flickr-token");
 const response = await client.photosets.getPhotos({ ... params ... });
 console.log(await response.json());
 ```
+
+## Implemented API Methods
+
+See documentation [https://www.flickr.com/services/api/](https://www.flickr.com/services/api/)
+
+- [x] activity
+- [ ] auth
+- [ ] auth.oauth
+- [ ] blogs
+- [ ] cameras
+- [ ] collections
+- [ ] commons
+- [ ] contacts
+- [ ] favorites
+- [ ] galleries
+- [ ] groups.discuss.replies
+- [ ] groups.discuss.topics
+- [ ] groups
+- [ ] groups.members
+- [ ] groups.pools
+- [ ] interestingness
+- [ ] machinetags
+- [ ] panda
+- [ ] people
+- [ ] photos
+- [ ] photos.comments
+- [ ] photos.geo
+- [ ] photos.licenses
+- [ ] photos.notes
+- [ ] photos.people
+- [ ] photos.suggestions
+- [ ] photos.transform
+- [ ] photos.upload
+- [x] photosets
+- [ ] photosets.comments
+- [ ] places
+- [ ] prefs
+- [ ] profile
+- [ ] push
+- [ ] reflection
+- [ ] stats
+- [ ] tags
+- [ ] test
+- [ ] testimonials
+- [ ] urls
+
 
 ## License
 

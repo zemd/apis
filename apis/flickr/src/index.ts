@@ -1,4 +1,5 @@
 import * as photosets from "./api/photosets.js";
+import * as activity from "./api/activity.js";
 import {
   debug,
   endpoint,
@@ -49,6 +50,10 @@ export const flickr = (apiKey: string, opts?: { url?: string; debug?: boolean })
       removePhotos: build(photosets.removePhotos),
       reorderPhotos: build(photosets.reorderPhotos),
       setPrimaryPhoto: build(photosets.setPrimaryPhoto),
+    },
+    activity: {
+      userComments: build(activity.userComments),
+      userPhotos: build(activity.userPhotos),
     },
   };
 };
