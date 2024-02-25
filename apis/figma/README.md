@@ -5,10 +5,10 @@ This is a Figma API implementation for javascript projects.
 ## Installation
 
 ```sh
-bun install @zemd/figma-rest-api
+bun add @zemd/figma-rest-api
 npm install @zemd/figma-rest-api
-yarn install @zemd/figma-rest-api
-pnpm install @zemd/figma-rest-api
+yarn add @zemd/figma-rest-api
+pnpm add @zemd/figma-rest-api
 ```
 
 ## Usage
@@ -28,9 +28,6 @@ some experimental features. In this case, you can construct your own api call us
 
 Since the library is built on top of `@zemd/http-client` you can compose different configurations together.
 
-```ts
-
-```
 
 ## License
 
