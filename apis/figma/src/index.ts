@@ -30,7 +30,7 @@ export const figma = (accessToken: string, opts?: { debug?: boolean; url?: strin
     fn: ArgFn,
   ): TEndpointResFn<ArgFnParams> => {
     const globalTransformers: Array<TTransformer> = [
-      prefix(opts?.url ?? "https://api.figma.com/v1"),
+      prefix(opts?.url ?? "https://api.figma.com"),
       json(),
       figmaToken(accessToken),
     ];
