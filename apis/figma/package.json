@@ -1,7 +1,7 @@
 {
   "name": "@zemd/figma-rest-api",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "Apache-2.0",
   "description": "Figma API client.",
   "author": {
@@ -38,7 +38,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@zemd/http-client": "^1.0.0",
+    "@zemd/http-client": "^2.0.0",
     "zod": "^3.23.8"
   }
 }
