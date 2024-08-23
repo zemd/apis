@@ -97,4 +97,5 @@ const oauth = createOAuth2Client({
 });
 const sdk = createApiSdk(oauth, {});
 
+// @ts-ignore
 const result = await sdk.someAction(123);
