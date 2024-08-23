@@ -9,20 +9,15 @@ export const GetActivityLogsQuerySchema = z.object({
   order: z.string().optional(),
 });
 
-export interface GetActivityLogsQuery
-  extends z.infer<typeof GetActivityLogsQuerySchema> {}
+export interface GetActivityLogsQuery extends z.infer<typeof GetActivityLogsQuerySchema> {}
 
 /**
  * Returns a list of activity log events
  */
-export const getActivityLogs = (
-  options?: GetActivityLogsQuery,
-): TEndpointDecTuple => {
+export const getActivityLogs = (options?: GetActivityLogsQuery): TEndpointDecTuple => {
   const transformers = [method("GET")];
   if (options) {
-    transformers.push(
-      query(GetActivityLogsQuerySchema.passthrough().parse(options)),
-    );
+    transformers.push(query(GetActivityLogsQuerySchema.passthrough().parse(options)));
   }
   return [`/v1/activity_logs`, transformers];
 };

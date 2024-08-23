@@ -25,14 +25,8 @@ export const figmaToken = (value: string): TFetchTransformer => {
   return header("X-Figma-Token", value);
 };
 
-export const figma = (
-  accessToken: string,
-  opts?: { debug?: boolean; url?: string },
-) => {
-  const build = <
-    ArgFn extends TEndpointDeclarationFn,
-    ArgFnParams extends Parameters<ArgFn>,
-  >(
+export const figma = (accessToken: string, opts?: { debug?: boolean; url?: string }) => {
+  const build = <ArgFn extends TEndpointDeclarationFn, ArgFnParams extends Parameters<ArgFn>>(
     fn: ArgFn,
   ): TEndpointResFn<ArgFnParams> => {
     const globalTransformers: Array<TFetchTransformer> = [

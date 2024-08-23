@@ -20,8 +20,7 @@ export const PostWebhooksBodySchema = z.object({
   description: z.string().optional(),
 });
 
-export interface PostWebhooksBody
-  extends z.infer<typeof PostWebhooksBodySchema> {}
+export interface PostWebhooksBody extends z.infer<typeof PostWebhooksBodySchema> {}
 
 /**
  * Create a new webhook which will call the specified endpoint when
@@ -31,13 +30,7 @@ export interface PostWebhooksBody
  * status to PAUSED and reactivate it later.
  */
 export const postWebhooks = (obj: PostWebhooksBody): TEndpointDecTuple => {
-  return [
-    `/v2/webhooks`,
-    [
-      method("POST"),
-      body(JSON.stringify(PostWebhooksBodySchema.passthrough().parse(obj))),
-    ],
-  ];
+  return [`/v2/webhooks`, [method("POST"), body(JSON.stringify(PostWebhooksBodySchema.passthrough().parse(obj)))]];
 };
 
 /**
@@ -55,21 +48,15 @@ export const PutWebhooksBodySchema = z.object({
   description: z.string().optional(),
 });
 
-export interface PutWebhooksBody
-  extends z.infer<typeof PutWebhooksBodySchema> {}
+export interface PutWebhooksBody extends z.infer<typeof PutWebhooksBodySchema> {}
 
 /**
  * Updates the webhook with the specified properties.
  */
-export const putWebhooks = (
-  webhookId: string,
-  obj?: PutWebhooksBody,
-): TEndpointDecTuple => {
+export const putWebhooks = (webhookId: string, obj?: PutWebhooksBody): TEndpointDecTuple => {
   const transformers = [method("PUT")];
   if (obj) {
-    transformers.push(
-      body(JSON.stringify(PutWebhooksBodySchema.passthrough().parse(obj))),
-    );
+    transformers.push(body(JSON.stringify(PutWebhooksBodySchema.passthrough().parse(obj))));
   }
   return [`/v2/webhooks/${webhookId}`, transformers];
 };

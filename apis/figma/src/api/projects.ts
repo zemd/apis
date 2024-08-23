@@ -18,21 +18,15 @@ const GetProjectFilesQuerySchema = z.object({
   branch_data: z.string().optional(),
 });
 
-export interface GetProjectFilesQuery
-  extends z.infer<typeof GetProjectFilesQuerySchema> {}
+export interface GetProjectFilesQuery extends z.infer<typeof GetProjectFilesQuerySchema> {}
 
 /**
  * List the files in a given project.
  */
-export const getProjectFiles = (
-  projectId: string,
-  options?: GetProjectFilesQuery,
-): TEndpointDecTuple => {
+export const getProjectFiles = (projectId: string, options?: GetProjectFilesQuery): TEndpointDecTuple => {
   const transformers = [method("GET")];
   if (options) {
-    transformers.push(
-      query(GetProjectFilesQuerySchema.passthrough().parse(options)),
-    );
+    transformers.push(query(GetProjectFilesQuerySchema.passthrough().parse(options)));
   }
   return [`/v1/projects/${projectId}/files`, transformers];
 };

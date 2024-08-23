@@ -7,20 +7,13 @@ export const PaginationQuerySchema = z.object({
   before: z.number().optional(),
 });
 
-export interface GetTeamComponentsQuery
-  extends z.infer<typeof PaginationQuerySchema> {}
+export interface GetTeamComponentsQuery extends z.infer<typeof PaginationQuerySchema> {}
 
 /**
  * Get a paginated list of published components within a team library
  */
-export const getTeamComponents = (
-  teamId: string,
-  options: GetTeamComponentsQuery,
-): TEndpointDecTuple => {
-  return [
-    `/v1/teams/${teamId}/components`,
-    [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))],
-  ];
+export const getTeamComponents = (teamId: string, options: GetTeamComponentsQuery): TEndpointDecTuple => {
+  return [`/v1/teams/${teamId}/components`, [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))]];
 };
 
 /**
@@ -37,15 +30,11 @@ export const getComponent = (key: string): TEndpointDecTuple => {
   return [`/v1/components/${key}`, [method("GET")]];
 };
 
-export interface GetTeamComponentSetsQuery
-  extends z.infer<typeof PaginationQuerySchema> {}
+export interface GetTeamComponentSetsQuery extends z.infer<typeof PaginationQuerySchema> {}
 /**
  * Get a paginated list of published component sets within a team library
  */
-export const getTeamComponentSets = (
-  teamId: string,
-  options: GetTeamComponentSetsQuery,
-): TEndpointDecTuple => {
+export const getTeamComponentSets = (teamId: string, options: GetTeamComponentSetsQuery): TEndpointDecTuple => {
   return [
     `/v1/teams/${teamId}/component_sets`,
     [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))],
@@ -66,20 +55,13 @@ export const getComponentSet = (key: string): TEndpointDecTuple => {
   return [`/v1/component_sets/${key}`, [method("GET")]];
 };
 
-export interface GetTeamStylesQuery
-  extends z.infer<typeof PaginationQuerySchema> {}
+export interface GetTeamStylesQuery extends z.infer<typeof PaginationQuerySchema> {}
 
 /**
  * Get a paginated list of published styles within a team library
  */
-export const getTeamStyles = (
-  teamId: string,
-  options: GetTeamStylesQuery,
-): TEndpointDecTuple => {
-  return [
-    `/v1/teams/${teamId}/styles`,
-    [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))],
-  ];
+export const getTeamStyles = (teamId: string, options: GetTeamStylesQuery): TEndpointDecTuple => {
+  return [`/v1/teams/${teamId}/styles`, [method("GET"), query(PaginationQuerySchema.passthrough().parse(options))]];
 };
 
 /**

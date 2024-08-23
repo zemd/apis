@@ -155,12 +155,7 @@ const VariableChange = z.discriminatedUnion("action", [
 const VariableModeValue = z.object({
   variableId: z.string(),
   modeId: z.string(),
-  value: z
-    .string()
-    .or(z.number())
-    .or(z.boolean())
-    .or(ColorProp)
-    .or(VariableAliasProp),
+  value: z.string().or(z.number()).or(z.boolean()).or(ColorProp).or(VariableAliasProp),
 });
 
 export const PostVariablesBodySchema = z.object({
@@ -170,23 +165,15 @@ export const PostVariablesBodySchema = z.object({
   variableModeValues: z.array(VariableModeValue).optional(),
 });
 
-export interface PostVariablesBody
-  extends z.infer<typeof PostVariablesBodySchema> {}
+export interface PostVariablesBody extends z.infer<typeof PostVariablesBodySchema> {}
 
 /**
  *
  */
-export const postVariables = (
-  key: string,
-  options?: PostVariablesBody,
-): TEndpointDecTuple => {
+export const postVariables = (key: string, options?: PostVariablesBody): TEndpointDecTuple => {
   const transformers = [method("POST")];
   if (options) {
-    transformers.push(
-      body(
-        JSON.stringify(PostVariablesBodySchema.passthrough().parse(options)),
-      ),
-    );
+    transformers.push(body(JSON.stringify(PostVariablesBodySchema.passthrough().parse(options))));
   }
   return [`/v1/files/${key}/variables`, transformers];
 };

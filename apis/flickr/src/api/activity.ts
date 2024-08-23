@@ -16,20 +16,15 @@ export const GetUserCommentsQuerySchema = z.object({
     .int()
     .min(1)
     .optional()
-    .describe(
-      "The page of results to return. If this argument is omitted, it defaults to 1.",
-    ),
+    .describe("The page of results to return. If this argument is omitted, it defaults to 1."),
 });
 
-export interface GetUserCommentsQuery
-  extends z.infer<typeof GetUserCommentsQuerySchema> {}
+export interface GetUserCommentsQuery extends z.infer<typeof GetUserCommentsQuerySchema> {}
 /**
  * Returns a list of recent activity on photos commented on by the calling user.
  * Do not poll this method more than once an hour.
  */
-export const userComments = (
-  params: GetUserCommentsQuery,
-): TEndpointDecTuple => {
+export const userComments = (params: GetUserCommentsQuery): TEndpointDecTuple => {
   return [
     `/`,
     [
@@ -62,13 +57,10 @@ export const GetUserPhotosQuerySchema = z.object({
     .int()
     .min(1)
     .optional()
-    .describe(
-      "The page of results to return. If this argument is omitted, it defaults to 1.",
-    ),
+    .describe("The page of results to return. If this argument is omitted, it defaults to 1."),
 });
 
-export interface GetUserPhotosQuery
-  extends z.infer<typeof GetUserPhotosQuerySchema> {}
+export interface GetUserPhotosQuery extends z.infer<typeof GetUserPhotosQuerySchema> {}
 
 export const userPhotos = (params: GetUserPhotosQuery): TEndpointDecTuple => {
   return [

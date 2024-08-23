@@ -12,14 +12,8 @@ import {
   type TFetchTransformer,
 } from "@zemd/http-client";
 
-export const flickr = (
-  apiKey: string,
-  opts?: { url?: string; debug?: boolean },
-) => {
-  const build = <
-    ArgFn extends TEndpointDeclarationFn,
-    ArgFnParams extends Parameters<ArgFn>,
-  >(
+export const flickr = (apiKey: string, opts?: { url?: string; debug?: boolean }) => {
+  const build = <ArgFn extends TEndpointDeclarationFn, ArgFnParams extends Parameters<ArgFn>>(
     fn: ArgFn,
   ): TEndpointResFn<ArgFnParams> => {
     const globalTransformers: Array<TFetchTransformer> = [

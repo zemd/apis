@@ -8,15 +8,11 @@ export const GetPaymentsQuerySchema = z.object({
   widget_id: z.number(),
 });
 
-export interface GetPaymentsQuery
-  extends z.infer<typeof GetPaymentsQuerySchema> {}
+export interface GetPaymentsQuery extends z.infer<typeof GetPaymentsQuerySchema> {}
 
 /**
  * Fetch the payment information of a user on your resource using IDs.
  */
 export const getPayments = (options: GetPaymentsQuery): TEndpointDecTuple => {
-  return [
-    `/v1/payments`,
-    [method("GET"), query(GetPaymentsQuerySchema.passthrough().parse(options))],
-  ];
+  return [`/v1/payments`, [method("GET"), query(GetPaymentsQuerySchema.passthrough().parse(options))]];
 };
