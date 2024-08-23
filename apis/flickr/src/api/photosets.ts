@@ -1,4 +1,4 @@
-import { method, query, type TEndpointDec } from "@zemd/http-client";
+import { method, query, type TEndpointDecTuple } from "@zemd/http-client";
 import { z } from "zod";
 
 const PRIVACY_FILTER_PUBLIC_PHOTOS = "1";
@@ -15,8 +15,14 @@ const PRIVACY_FILTER = [
 ] as const;
 
 export const GetPhotosQuerySchema = z.object({
-  photoset_id: z.string().describe("The id of the photoset to return the photos for."),
-  user_id: z.string().describe("The user_id here is the owner of the set passed in photoset_id."),
+  photoset_id: z
+    .string()
+    .describe("The id of the photoset to return the photos for."),
+  user_id: z
+    .string()
+    .describe(
+      "The user_id here is the owner of the set passed in photoset_id.",
+    ),
   // TODO: implement validation and transform
   extras: z
     .string()
@@ -39,14 +45,20 @@ export const GetPhotosQuerySchema = z.object({
     .int()
     .min(1)
     .optional()
-    .describe("The page of results to return. If this argument is omitted, it defaults to 1."),
+    .describe(
+      "The page of results to return. If this argument is omitted, it defaults to 1.",
+    ),
   privacy_filter: z
     .enum(PRIVACY_FILTER)
     .optional()
     .describe(
       "Return photos only matching a certain privacy level. This only applies when making an authenticated call to view a photoset you own.",
     ),
-  media: z.enum(["all", "photos", "videos"]).default("all").optional().describe("Filter results by media type."),
+  media: z
+    .enum(["all", "photos", "videos"])
+    .default("all")
+    .optional()
+    .describe("Filter results by media type."),
 });
 
 export interface GetPhotosQuery extends z.infer<typeof GetPhotosQuerySchema> {}
@@ -54,7 +66,7 @@ export interface GetPhotosQuery extends z.infer<typeof GetPhotosQuerySchema> {}
 /**
  * Get the list of photos in a set.
  */
-export const getPhotos = (params: GetPhotosQuery): TEndpointDec => {
+export const getPhotos = (params: GetPhotosQuery): TEndpointDecTuple => {
   return [
     `/`,
     [
@@ -75,7 +87,7 @@ export interface AddPhotoQuery extends z.infer<typeof AddPhotoQuerySchema> {}
 /**
  * Add a photo to the end of an existing photoset.
  */
-export const addPhoto = (params: AddPhotoQuery): TEndpointDec => {
+export const addPhoto = (params: AddPhotoQuery): TEndpointDecTuple => {
   return [
     `/`,
     [
@@ -90,16 +102,22 @@ export const CreatePhotosetQuerySchema = z.object({
   title: z.string().describe("A title for the photoset."),
   primary_photo_id: z
     .string()
-    .describe("The id of the photo to represent this set. The photo must belong to the calling user."),
-  description: z.string().optional().describe("A description of the photoset. May contain limited html."),
+    .describe(
+      "The id of the photo to represent this set. The photo must belong to the calling user.",
+    ),
+  description: z
+    .string()
+    .optional()
+    .describe("A description of the photoset. May contain limited html."),
 });
 
-export interface CreateQuery extends z.infer<typeof CreatePhotosetQuerySchema> {}
+export interface CreateQuery
+  extends z.infer<typeof CreatePhotosetQuerySchema> {}
 
 /**
  * Create a new photoset for the calling user.
  */
-export const createPhotoset = (params: CreateQuery): TEndpointDec => {
+export const createPhotoset = (params: CreateQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -111,15 +129,22 @@ export const createPhotoset = (params: CreateQuery): TEndpointDec => {
 };
 
 export const DeletePhotosetQuerySchema = z.object({
-  photoset_id: z.string().describe("The id of the photoset to delete. It must be owned by the calling user."),
+  photoset_id: z
+    .string()
+    .describe(
+      "The id of the photoset to delete. It must be owned by the calling user.",
+    ),
 });
 
-export interface DeletePhotosetQuery extends z.infer<typeof DeletePhotosetQuerySchema> {}
+export interface DeletePhotosetQuery
+  extends z.infer<typeof DeletePhotosetQuerySchema> {}
 
 /**
  * Delete a photoset.
  */
-export const deletePhotoset = (params: DeletePhotosetQuery): TEndpointDec => {
+export const deletePhotoset = (
+  params: DeletePhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -133,15 +158,18 @@ export const deletePhotoset = (params: DeletePhotosetQuery): TEndpointDec => {
 export const EditMetaPhotosetQuerySchema = z.object({
   photoset_id: z.string().describe("The id of the photoset to modify."),
   title: z.string().describe("The new title for the photoset."),
-  description: z.string().describe("A description of the photoset. May contain limited html."),
+  description: z
+    .string()
+    .describe("A description of the photoset. May contain limited html."),
 });
 
-export interface EditMetaPhotosetQuery extends z.infer<typeof EditMetaPhotosetQuerySchema> {}
+export interface EditMetaPhotosetQuery
+  extends z.infer<typeof EditMetaPhotosetQuerySchema> {}
 
 /**
  * Modify the meta-data for a photoset.
  */
-export const editMeta = (params: EditMetaPhotosetQuery): TEndpointDec => {
+export const editMeta = (params: EditMetaPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -153,7 +181,11 @@ export const editMeta = (params: EditMetaPhotosetQuery): TEndpointDec => {
 };
 
 export const EditPhotosPhotosetQuerySchema = z.object({
-  photoset_id: z.string().describe("The id of the photoset to modify. The photoset must belong to the calling user."),
+  photoset_id: z
+    .string()
+    .describe(
+      "The id of the photoset to modify. The photoset must belong to the calling user.",
+    ),
   primary_photo_id: z
     .string()
     .describe(
@@ -166,12 +198,15 @@ export const EditPhotosPhotosetQuerySchema = z.object({
     ),
 });
 
-export interface EditPhotosPhotosetQuery extends z.infer<typeof EditPhotosPhotosetQuerySchema> {}
+export interface EditPhotosPhotosetQuery
+  extends z.infer<typeof EditPhotosPhotosetQuerySchema> {}
 
 /**
  * Modify the photos in a photoset. Use this method to add, remove and re-order photos.
  */
-export const editPhotos = (params: EditPhotosPhotosetQuery): TEndpointDec => {
+export const editPhotos = (
+  params: EditPhotosPhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -183,16 +218,23 @@ export const editPhotos = (params: EditPhotosPhotosetQuery): TEndpointDec => {
 };
 
 export const GetContextPhotosetQuerySchema = z.object({
-  photo_id: z.string().describe("The id of the photo to fetch the context for."),
-  photoset_id: z.string().describe("The id of the photoset for which to fetch the photo's context."),
+  photo_id: z
+    .string()
+    .describe("The id of the photo to fetch the context for."),
+  photoset_id: z
+    .string()
+    .describe("The id of the photoset for which to fetch the photo's context."),
 });
 
-export interface GetContextPhotosetQuery extends z.infer<typeof GetContextPhotosetQuerySchema> {}
+export interface GetContextPhotosetQuery
+  extends z.infer<typeof GetContextPhotosetQuerySchema> {}
 
 /**
  * Returns next and previous photos for a photo in a set.
  */
-export const getContext = (params: GetContextPhotosetQuery): TEndpointDec => {
+export const getContext = (
+  params: GetContextPhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -204,16 +246,23 @@ export const getContext = (params: GetContextPhotosetQuery): TEndpointDec => {
 };
 
 export const GetInfoPhotosetQuerySchema = z.object({
-  photoset_id: z.string().describe("The ID of the photoset to fetch information for."),
-  user_id: z.string().describe("The user_id here is the owner of the set passed in photoset_id."),
+  photoset_id: z
+    .string()
+    .describe("The ID of the photoset to fetch information for."),
+  user_id: z
+    .string()
+    .describe(
+      "The user_id here is the owner of the set passed in photoset_id.",
+    ),
 });
 
-export interface GetInfoPhotosetQuery extends z.infer<typeof GetInfoPhotosetQuerySchema> {}
+export interface GetInfoPhotosetQuery
+  extends z.infer<typeof GetInfoPhotosetQuerySchema> {}
 
 /**
  * Gets information about a photoset.
  */
-export const getInfo = (params: GetInfoPhotosetQuery): TEndpointDec => {
+export const getInfo = (params: GetInfoPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -228,7 +277,9 @@ export const GetListPhotosetQuerySchema = z.object({
   user_id: z
     .string()
     .optional()
-    .describe("The NSID of the user to get a photoset list for. If none is specified, the calling user is assumed."),
+    .describe(
+      "The NSID of the user to get a photoset list for. If none is specified, the calling user is assumed.",
+    ),
   page: z
     .string()
     .optional()
@@ -241,7 +292,9 @@ export const GetListPhotosetQuerySchema = z.object({
     .min(1)
     .max(500)
     .optional()
-    .describe("The number of sets to get per page. If paging is enabled, the maximum number of sets per page is 500."),
+    .describe(
+      "The number of sets to get per page. If paging is enabled, the maximum number of sets per page is 500.",
+    ),
   // TODO: implement validation and transform
   primary_photo_extras: z
     .string()
@@ -263,12 +316,13 @@ export const GetListPhotosetQuerySchema = z.object({
     ),
 });
 
-export interface GetListPhotosetQuery extends z.infer<typeof GetListPhotosetQuerySchema> {}
+export interface GetListPhotosetQuery
+  extends z.infer<typeof GetListPhotosetQuerySchema> {}
 
 /**
  * Returns the photosets belonging to the specified user.
  */
-export const getList = (params: GetListPhotosetQuery): TEndpointDec => {
+export const getList = (params: GetListPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -287,12 +341,15 @@ export const OrderSetsPhotosetQuerySchema = z.object({
     ),
 });
 
-export interface OrderSetsPhotosetQuery extends z.infer<typeof OrderSetsPhotosetQuerySchema> {}
+export interface OrderSetsPhotosetQuery
+  extends z.infer<typeof OrderSetsPhotosetQuerySchema> {}
 
 /**
  * Set the order of photosets for the calling user.
  */
-export const orderSets = (params: OrderSetsPhotosetQuery): TEndpointDec => {
+export const orderSets = (
+  params: OrderSetsPhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -304,16 +361,21 @@ export const orderSets = (params: OrderSetsPhotosetQuery): TEndpointDec => {
 };
 
 export const RemovePhotoPhotosetQuerySchema = z.object({
-  photoset_id: z.string().describe("The id of the photoset to remove a photo from."),
+  photoset_id: z
+    .string()
+    .describe("The id of the photoset to remove a photo from."),
   photo_id: z.string().describe("The id of the photo to remove from the set"),
 });
 
-export interface RemovePhotoPhotosetQuery extends z.infer<typeof RemovePhotoPhotosetQuerySchema> {}
+export interface RemovePhotoPhotosetQuery
+  extends z.infer<typeof RemovePhotoPhotosetQuerySchema> {}
 
 /**
  * Remove a photo from a photoset.
  */
-export const removePhoto = (params: RemovePhotoPhotosetQuery): TEndpointDec => {
+export const removePhoto = (
+  params: RemovePhotoPhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -325,16 +387,23 @@ export const removePhoto = (params: RemovePhotoPhotosetQuery): TEndpointDec => {
 };
 
 export const RemovePhotosPhotosetQuerySchema = z.object({
-  photoset_id: z.string().describe("The id of the photoset to remove photos from."),
-  photo_ids: z.string().describe("Comma-delimited list of photo ids to remove from the photoset."),
+  photoset_id: z
+    .string()
+    .describe("The id of the photoset to remove photos from."),
+  photo_ids: z
+    .string()
+    .describe("Comma-delimited list of photo ids to remove from the photoset."),
 });
 
-export interface RemovePhotosPhotosetQuery extends z.infer<typeof RemovePhotosPhotosetQuerySchema> {}
+export interface RemovePhotosPhotosetQuery
+  extends z.infer<typeof RemovePhotosPhotosetQuerySchema> {}
 
 /**
  * Remove multiple photos from a photoset.
  */
-export const removePhotos = (params: RemovePhotosPhotosetQuery): TEndpointDec => {
+export const removePhotos = (
+  params: RemovePhotosPhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -346,7 +415,11 @@ export const removePhotos = (params: RemovePhotosPhotosetQuery): TEndpointDec =>
 };
 
 export const ReorderPhotosPhotosetQuerySchema = z.object({
-  photoset_id: z.string().describe("The id of the photoset to reorder. The photoset must belong to the calling user."),
+  photoset_id: z
+    .string()
+    .describe(
+      "The id of the photoset to reorder. The photoset must belong to the calling user.",
+    ),
   photo_ids: z
     .string()
     .describe(
@@ -354,9 +427,12 @@ export const ReorderPhotosPhotosetQuerySchema = z.object({
     ),
 });
 
-export interface ReorderPhotosPhotosetQuery extends z.infer<typeof ReorderPhotosPhotosetQuerySchema> {}
+export interface ReorderPhotosPhotosetQuery
+  extends z.infer<typeof ReorderPhotosPhotosetQuerySchema> {}
 
-export const reorderPhotos = (params: ReorderPhotosPhotosetQuery): TEndpointDec => {
+export const reorderPhotos = (
+  params: ReorderPhotosPhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -369,12 +445,15 @@ export const reorderPhotos = (params: ReorderPhotosPhotosetQuery): TEndpointDec 
 
 export const SetPrimaryPhotoPhotosetQuerySchema = z.object({});
 
-export interface SetPrimaryPhotoPhotosetQuery extends z.infer<typeof SetPrimaryPhotoPhotosetQuerySchema> {}
+export interface SetPrimaryPhotoPhotosetQuery
+  extends z.infer<typeof SetPrimaryPhotoPhotosetQuerySchema> {}
 
 /**
  * Set photoset primary photo
  */
-export const setPrimaryPhoto = (params: SetPrimaryPhotoPhotosetQuery): TEndpointDec => {
+export const setPrimaryPhoto = (
+  params: SetPrimaryPhotoPhotosetQuery,
+): TEndpointDecTuple => {
   return [
     "/",
     [

@@ -15,21 +15,27 @@ import {
   header,
   json,
   prefix,
-  type TEndpointDec,
+  type TEndpointDecTuple,
   type TEndpointDeclarationFn,
   type TEndpointResFn,
-  type TTransformer,
+  type TFetchTransformer,
 } from "@zemd/http-client";
 
-export const figmaToken = (value: string): TTransformer => {
+export const figmaToken = (value: string): TFetchTransformer => {
   return header("X-Figma-Token", value);
 };
 
-export const figma = (accessToken: string, opts?: { debug?: boolean; url?: string }) => {
-  const build = <ArgFn extends TEndpointDeclarationFn, ArgFnParams extends Parameters<ArgFn>>(
+export const figma = (
+  accessToken: string,
+  opts?: { debug?: boolean; url?: string },
+) => {
+  const build = <
+    ArgFn extends TEndpointDeclarationFn,
+    ArgFnParams extends Parameters<ArgFn>,
+  >(
     fn: ArgFn,
   ): TEndpointResFn<ArgFnParams> => {
-    const globalTransformers: Array<TTransformer> = [
+    const globalTransformers: Array<TFetchTransformer> = [
       prefix(opts?.url ?? "https://api.figma.com"),
       json(),
       figmaToken(accessToken),
@@ -39,8 +45,8 @@ export const figma = (accessToken: string, opts?: { debug?: boolean; url?: strin
       globalTransformers.push(debug());
     }
 
-    const endpointDecFn = (...params: ArgFnParams): TEndpointDec => {
-      const [path, transformers]: TEndpointDec = fn(...params);
+    const endpointDecFn = (...params: ArgFnParams): TEndpointDecTuple => {
+      const [path, transformers]: TEndpointDecTuple = fn(...params);
       return [path, [...transformers, ...globalTransformers]];
     };
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { body, method, type TEndpointDec } from "@zemd/http-client";
+import { body, method, type TEndpointDecTuple } from "@zemd/http-client";
 
 const WebhookV2Event = z.enum([
   "FILE_UPDATE",
@@ -20,7 +20,8 @@ export const PostWebhooksBodySchema = z.object({
   description: z.string().optional(),
 });
 
-export interface PostWebhooksBody extends z.infer<typeof PostWebhooksBodySchema> {}
+export interface PostWebhooksBody
+  extends z.infer<typeof PostWebhooksBodySchema> {}
 
 /**
  * Create a new webhook which will call the specified endpoint when
@@ -29,14 +30,20 @@ export interface PostWebhooksBody extends z.infer<typeof PostWebhooksBodySchema>
  * behavior is not desired, you can create the webhook and set the
  * status to PAUSED and reactivate it later.
  */
-export const postWebhooks = (obj: PostWebhooksBody): TEndpointDec => {
-  return [`/v2/webhooks`, [method("POST"), body(JSON.stringify(PostWebhooksBodySchema.passthrough().parse(obj)))]];
+export const postWebhooks = (obj: PostWebhooksBody): TEndpointDecTuple => {
+  return [
+    `/v2/webhooks`,
+    [
+      method("POST"),
+      body(JSON.stringify(PostWebhooksBodySchema.passthrough().parse(obj))),
+    ],
+  ];
 };
 
 /**
  * Returns the WebhookV2 corresponding to the ID provided, if it exists.
  */
-export const getWebhooks = (webhookId: string): TEndpointDec => {
+export const getWebhooks = (webhookId: string): TEndpointDecTuple => {
   return [`/v2/webhooks/${webhookId}`, [method("GET")]];
 };
 
@@ -48,15 +55,21 @@ export const PutWebhooksBodySchema = z.object({
   description: z.string().optional(),
 });
 
-export interface PutWebhooksBody extends z.infer<typeof PutWebhooksBodySchema> {}
+export interface PutWebhooksBody
+  extends z.infer<typeof PutWebhooksBodySchema> {}
 
 /**
  * Updates the webhook with the specified properties.
  */
-export const putWebhooks = (webhookId: string, obj?: PutWebhooksBody): TEndpointDec => {
+export const putWebhooks = (
+  webhookId: string,
+  obj?: PutWebhooksBody,
+): TEndpointDecTuple => {
   const transformers = [method("PUT")];
   if (obj) {
-    transformers.push(body(JSON.stringify(PutWebhooksBodySchema.passthrough().parse(obj))));
+    transformers.push(
+      body(JSON.stringify(PutWebhooksBodySchema.passthrough().parse(obj))),
+    );
   }
   return [`/v2/webhooks/${webhookId}`, transformers];
 };
@@ -64,20 +77,20 @@ export const putWebhooks = (webhookId: string, obj?: PutWebhooksBody): TEndpoint
 /**
  * Deletes the specified webhook. This operation cannot be reversed.
  */
-export const deleteWebhooks = (webhookId: string): TEndpointDec => {
+export const deleteWebhooks = (webhookId: string): TEndpointDecTuple => {
   return [`/v2/webhooks/${webhookId}`, [method("DELETE")]];
 };
 
 /**
  * Returns all webhooks registered under the specified team.
  */
-export const getTeamWebhooks = (teamId: string): TEndpointDec => {
+export const getTeamWebhooks = (teamId: string): TEndpointDecTuple => {
   return [`/v2/teams/${teamId}/webhooks`, [method("GET")]];
 };
 
 /**
  * Returns all webhook requests sent within the last week. Useful for debugging.
  */
-export const getWebhooksRequests = (webhookId: string): TEndpointDec => {
+export const getWebhooksRequests = (webhookId: string): TEndpointDecTuple => {
   return [`/v2/webhooks/${webhookId}/requests`, [method("GET")]];
 };

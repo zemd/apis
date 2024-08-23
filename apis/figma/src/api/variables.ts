@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { body, method, type TEndpointDec } from "@zemd/http-client";
+import { body, method, type TEndpointDecTuple } from "@zemd/http-client";
 import { ColorProp, VariableAliasProp } from "../schema.js";
 
 /**
@@ -19,7 +19,7 @@ import { ColorProp, VariableAliasProp } from "../schema.js";
  * Instead, you will need to use the GET /v1/files/:file_key/variables/local
  * endpoint, in the same file, to examine the mode values.
  */
-export const getLocalVariables = (key: string): TEndpointDec => {
+export const getLocalVariables = (key: string): TEndpointDecTuple => {
   return [`/v1/files/${key}/variables/local`, [method("GET")]];
 };
 
@@ -45,7 +45,7 @@ export const getLocalVariables = (key: string): TEndpointDec => {
  * change to a variable was published. For variable collections, this timestamp will
  * change any time a variable in the collection is changed.
  */
-export const getPublishedVariables = (key: string): TEndpointDec => {
+export const getPublishedVariables = (key: string): TEndpointDecTuple => {
   return [`/v1/files/${key}/variables/published`, [method("GET")]];
 };
 
@@ -155,7 +155,12 @@ const VariableChange = z.discriminatedUnion("action", [
 const VariableModeValue = z.object({
   variableId: z.string(),
   modeId: z.string(),
-  value: z.string().or(z.number()).or(z.boolean()).or(ColorProp).or(VariableAliasProp),
+  value: z
+    .string()
+    .or(z.number())
+    .or(z.boolean())
+    .or(ColorProp)
+    .or(VariableAliasProp),
 });
 
 export const PostVariablesBodySchema = z.object({
@@ -165,15 +170,23 @@ export const PostVariablesBodySchema = z.object({
   variableModeValues: z.array(VariableModeValue).optional(),
 });
 
-export interface PostVariablesBody extends z.infer<typeof PostVariablesBodySchema> {}
+export interface PostVariablesBody
+  extends z.infer<typeof PostVariablesBodySchema> {}
 
 /**
  *
  */
-export const postVariables = (key: string, options?: PostVariablesBody): TEndpointDec => {
+export const postVariables = (
+  key: string,
+  options?: PostVariablesBody,
+): TEndpointDecTuple => {
   const transformers = [method("POST")];
   if (options) {
-    transformers.push(body(JSON.stringify(PostVariablesBodySchema.passthrough().parse(options))));
+    transformers.push(
+      body(
+        JSON.stringify(PostVariablesBodySchema.passthrough().parse(options)),
+      ),
+    );
   }
   return [`/v1/files/${key}/variables`, transformers];
 };

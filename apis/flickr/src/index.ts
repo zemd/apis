@@ -6,17 +6,23 @@ import {
   json,
   prefix,
   query,
-  type TEndpointDec,
+  type TEndpointDecTuple,
   type TEndpointDeclarationFn,
   type TEndpointResFn,
-  type TTransformer,
+  type TFetchTransformer,
 } from "@zemd/http-client";
 
-export const flickr = (apiKey: string, opts?: { url?: string; debug?: boolean }) => {
-  const build = <ArgFn extends TEndpointDeclarationFn, ArgFnParams extends Parameters<ArgFn>>(
+export const flickr = (
+  apiKey: string,
+  opts?: { url?: string; debug?: boolean },
+) => {
+  const build = <
+    ArgFn extends TEndpointDeclarationFn,
+    ArgFnParams extends Parameters<ArgFn>,
+  >(
     fn: ArgFn,
   ): TEndpointResFn<ArgFnParams> => {
-    const globalTransformers: Array<TTransformer> = [
+    const globalTransformers: Array<TFetchTransformer> = [
       prefix(opts?.url ?? "https://api.flickr.com/services/rest"),
       query({ api_key: apiKey, format: "json", nojsoncallback: 1 }),
       json(),
@@ -26,8 +32,8 @@ export const flickr = (apiKey: string, opts?: { url?: string; debug?: boolean })
       globalTransformers.push(debug());
     }
 
-    const endpointDecFn = (...params: ArgFnParams): TEndpointDec => {
-      const [path, transformers]: TEndpointDec = fn(...params);
+    const endpointDecFn = (...params: ArgFnParams): TEndpointDecTuple => {
+      const [path, transformers]: TEndpointDecTuple = fn(...params);
       return [path, [...transformers, ...globalTransformers]];
     };
 

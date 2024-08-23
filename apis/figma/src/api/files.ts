@@ -1,4 +1,4 @@
-import { method, query, type TEndpointDec } from "@zemd/http-client";
+import { method, query, type TEndpointDecTuple } from "@zemd/http-client";
 import { z } from "zod";
 
 export const GetFileQuerySchema = z.object({
@@ -23,7 +23,10 @@ export interface GetFileQuery extends z.infer<typeof GetFileQuerySchema> {}
  * The components key contains a mapping from node IDs to component metadata.
  * This is to help you determine which components each instance comes from.
  */
-export const getFile = (key: string, options?: GetFileQuery): TEndpointDec => {
+export const getFile = (
+  key: string,
+  options?: GetFileQuery,
+): TEndpointDecTuple => {
   const transformers = [method("GET")];
 
   if (options) {
@@ -41,7 +44,8 @@ export const GetFileNodesQuerySchema = z.object({
   plugin_data: z.string().optional(),
 });
 
-export interface GetFileNodesQuery extends z.infer<typeof GetFileNodesQuerySchema> {}
+export interface GetFileNodesQuery
+  extends z.infer<typeof GetFileNodesQuerySchema> {}
 
 /**
  * Returns the nodes referenced to by `:ids` as a JSON object. The nodes are
@@ -66,8 +70,17 @@ export interface GetFileNodesQuery extends z.infer<typeof GetFileNodesQuerySchem
  * Important: the nodes map may contain values that are null . This may be due
  * to the node id not existing within the specified file.
  */
-export const getFileNodes = (key: string, options: GetFileNodesQuery): TEndpointDec => {
-  return [`/files/${key}/nodes`, [method("GET"), query(GetFileNodesQuerySchema.passthrough().parse(options))]];
+export const getFileNodes = (
+  key: string,
+  options: GetFileNodesQuery,
+): TEndpointDecTuple => {
+  return [
+    `/files/${key}/nodes`,
+    [
+      method("GET"),
+      query(GetFileNodesQuerySchema.passthrough().parse(options)),
+    ],
+  ];
 };
 
 export const GetImageQuerySchema = z.object({
@@ -103,8 +116,14 @@ export interface GetImageQuery extends z.infer<typeof GetImageQuerySchema> {}
  * To render multiple images from the same file, use the ids query parameter
  * to specify multiple node ids.
  */
-export const getImage = (key: string, options: GetImageQuery): TEndpointDec => {
-  return [`/images/${key}`, [method("GET"), query(GetImageQuerySchema.passthrough().parse(options))]];
+export const getImage = (
+  key: string,
+  options: GetImageQuery,
+): TEndpointDecTuple => {
+  return [
+    `/images/${key}`,
+    [method("GET"), query(GetImageQuerySchema.passthrough().parse(options))],
+  ];
 };
 
 /**
@@ -119,6 +138,6 @@ export const getImage = (key: string, options: GetImageQuery): TEndpointDec => {
  * references are located in the output of the GET files endpoint under the imageRef
  * attribute in a Paint.
  */
-export const getImageFills = (key: string): TEndpointDec => {
+export const getImageFills = (key: string): TEndpointDecTuple => {
   return [`/files/${key}/images`, [method("GET")]];
 };

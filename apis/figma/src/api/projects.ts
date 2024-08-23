@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { method, query, type TEndpointDec } from "@zemd/http-client";
+import { method, query, type TEndpointDecTuple } from "@zemd/http-client";
 
 /**
  * You can use this Endpoint to get a list of all the Projects within
@@ -10,7 +10,7 @@ import { method, query, type TEndpointDec } from "@zemd/http-client";
  * team you are a part of. The team id will be present in the URL after
  * the word team and before your team name.
  */
-export const getTeamProjects = (teamId: string): TEndpointDec => {
+export const getTeamProjects = (teamId: string): TEndpointDecTuple => {
   return [`/v1/teams/${teamId}/projects`, [method("GET")]];
 };
 
@@ -18,15 +18,21 @@ const GetProjectFilesQuerySchema = z.object({
   branch_data: z.string().optional(),
 });
 
-export interface GetProjectFilesQuery extends z.infer<typeof GetProjectFilesQuerySchema> {}
+export interface GetProjectFilesQuery
+  extends z.infer<typeof GetProjectFilesQuerySchema> {}
 
 /**
  * List the files in a given project.
  */
-export const getProjectFiles = (projectId: string, options?: GetProjectFilesQuery): TEndpointDec => {
+export const getProjectFiles = (
+  projectId: string,
+  options?: GetProjectFilesQuery,
+): TEndpointDecTuple => {
   const transformers = [method("GET")];
   if (options) {
-    transformers.push(query(GetProjectFilesQuerySchema.passthrough().parse(options)));
+    transformers.push(
+      query(GetProjectFilesQuerySchema.passthrough().parse(options)),
+    );
   }
   return [`/v1/projects/${projectId}/files`, transformers];
 };
