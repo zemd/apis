@@ -5,8 +5,9 @@ of api clients.
 
 At the moment there are two main libraries:
 
-- [`@zemd/http-client`](./packages/http-client) - a lib which follows simple concept for building http clients
-- [`@zemd/figma-rest-api`](./apis/figma) - a lib that is built on top of `@zemd/http-client` and provides a client for working with Figma REST API.
+- [`@zemd/http-client`](./packages/http-client) - [![npm](https://img.shields.io/npm/v/@zemd/http-client?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/http-client) a lib which follows simple concept for building http clients
+- [`@zemd/figma-rest-api`](./apis/figma) - [![npm](https://img.shields.io/npm/v/@zemd/figma-rest-api?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/figma-rest-api) a lib that is built on top of `@zemd/http-client` and provides a client for working with Figma REST API.
+- [`@zemd/flickr-rest-api`](./apis/flickr) - [![npm](https://img.shields.io/npm/v/@zemd/flickr-rest-api?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/flickr-rest-api) a lib that is built on top of `@zemd/http-client` and provides a client for working with Flickr REST API.
 
 ## License
 
