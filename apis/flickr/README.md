@@ -68,7 +68,6 @@ See documentation [https://www.flickr.com/services/api/](https://www.flickr.com/
 - [ ] testimonials
 - [ ] urls
 
-
 ## License
 
 `@zemd/flickr-rest-api` released under the Apache 2.0 license
@@ -77,4 +76,3 @@ See documentation [https://www.flickr.com/services/api/](https://www.flickr.com/
 
 [![](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/red_rabbit)
 [![](https://img.shields.io/static/v1?label=UNITED24&message=support%20Ukraine&color=blue)](https://u24.gov.ua/)
-

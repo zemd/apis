@@ -28,7 +28,6 @@ some experimental features. In this case, you can construct your own api call us
 
 Since the library is built on top of `@zemd/http-client` you can compose different configurations together.
 
-
 ## License
 
 `@zemd/figma-rest-api` released under the Apache 2.0 license
@@ -37,4 +36,3 @@ Since the library is built on top of `@zemd/http-client` you can compose differe
 
 [![](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/red_rabbit)
 [![](https://img.shields.io/static/v1?label=UNITED24&message=support%20Ukraine&color=blue)](https://u24.gov.ua/)
-

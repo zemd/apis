@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { body, method, query, type TEndpointDec } from "@zemd/http-client";
+import { body, method, query, type TEndpointDecTuple } from "@zemd/http-client";
 
 const GetCommentsQuerySchema = z.object({
   as_md: z.coerce.boolean().optional(),
@@ -10,7 +10,7 @@ export interface GetCommentsQuery extends z.infer<typeof GetCommentsQuerySchema>
 /**
  * Gets a list of comments left on the file.
  */
-export const getComments = (key: string, options?: GetCommentsQuery): TEndpointDec => {
+export const getComments = (key: string, options?: GetCommentsQuery): TEndpointDecTuple => {
   const transformers = [method("GET")];
   if (options) {
     transformers.push(query(GetCommentsQuerySchema.passthrough().parse(options)));
@@ -57,7 +57,7 @@ export interface PostCommentsQuery extends z.infer<typeof PostCommentsQuerySchem
 /**
  * Posts a new comment on the file.
  */
-export const postComments = (key: string, message: PostCommentsQuery): TEndpointDec => {
+export const postComments = (key: string, message: PostCommentsQuery): TEndpointDecTuple => {
   return [
     `/v1/files/${key}/comments`,
     [method("POST"), body(JSON.stringify(PostCommentsQuerySchema.passthrough().parse(message)))],
@@ -67,7 +67,7 @@ export const postComments = (key: string, message: PostCommentsQuery): TEndpoint
 /**
  * Deletes a specific comment. Only the person who made the comment is allowed to delete it.
  */
-export const deleteComments = (key: string, commendId: string): TEndpointDec => {
+export const deleteComments = (key: string, commendId: string): TEndpointDecTuple => {
   return [`/v1/files/${key}/comments/${commendId}`, [method("DELETE")]];
 };
 
@@ -84,7 +84,7 @@ export const getCommentsReactions = (
   key: string,
   commentId: string,
   options?: GetCommentsReactionsQuery,
-): TEndpointDec => {
+): TEndpointDecTuple => {
   const transformers = [method("GET")];
   if (options) {
     transformers.push(query(GetCommentsReactionsQuerySchema.passthrough().parse(options)));
@@ -105,7 +105,7 @@ export const postCommentsReactions = (
   key: string,
   commentId: string,
   options: PostCommentsReactionsQuery,
-): TEndpointDec => {
+): TEndpointDecTuple => {
   return [
     `/v1/files/${key}/comments/${commentId}/reactions`,
     [method("POST"), body(JSON.stringify(PostCommentsReactionsQuerySchema.passthrough().parse(options)))],
@@ -120,7 +120,7 @@ export const deleteCommentsReactions = (
   key: string,
   commentId: string,
   options: PostCommentsReactionsQuery,
-): TEndpointDec => {
+): TEndpointDecTuple => {
   return [
     `/v1/files/${key}/comments/${commentId}/reactions`,
     [method("DELETE"), query(PostCommentsReactionsQuerySchema.passthrough().parse(options))],

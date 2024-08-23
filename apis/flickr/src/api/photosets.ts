@@ -1,4 +1,4 @@
-import { method, query, type TEndpointDec } from "@zemd/http-client";
+import { method, query, type TEndpointDecTuple } from "@zemd/http-client";
 import { z } from "zod";
 
 const PRIVACY_FILTER_PUBLIC_PHOTOS = "1";
@@ -54,7 +54,7 @@ export interface GetPhotosQuery extends z.infer<typeof GetPhotosQuerySchema> {}
 /**
  * Get the list of photos in a set.
  */
-export const getPhotos = (params: GetPhotosQuery): TEndpointDec => {
+export const getPhotos = (params: GetPhotosQuery): TEndpointDecTuple => {
   return [
     `/`,
     [
@@ -75,7 +75,7 @@ export interface AddPhotoQuery extends z.infer<typeof AddPhotoQuerySchema> {}
 /**
  * Add a photo to the end of an existing photoset.
  */
-export const addPhoto = (params: AddPhotoQuery): TEndpointDec => {
+export const addPhoto = (params: AddPhotoQuery): TEndpointDecTuple => {
   return [
     `/`,
     [
@@ -99,7 +99,7 @@ export interface CreateQuery extends z.infer<typeof CreatePhotosetQuerySchema> {
 /**
  * Create a new photoset for the calling user.
  */
-export const createPhotoset = (params: CreateQuery): TEndpointDec => {
+export const createPhotoset = (params: CreateQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -119,7 +119,7 @@ export interface DeletePhotosetQuery extends z.infer<typeof DeletePhotosetQueryS
 /**
  * Delete a photoset.
  */
-export const deletePhotoset = (params: DeletePhotosetQuery): TEndpointDec => {
+export const deletePhotoset = (params: DeletePhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -141,7 +141,7 @@ export interface EditMetaPhotosetQuery extends z.infer<typeof EditMetaPhotosetQu
 /**
  * Modify the meta-data for a photoset.
  */
-export const editMeta = (params: EditMetaPhotosetQuery): TEndpointDec => {
+export const editMeta = (params: EditMetaPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -171,7 +171,7 @@ export interface EditPhotosPhotosetQuery extends z.infer<typeof EditPhotosPhotos
 /**
  * Modify the photos in a photoset. Use this method to add, remove and re-order photos.
  */
-export const editPhotos = (params: EditPhotosPhotosetQuery): TEndpointDec => {
+export const editPhotos = (params: EditPhotosPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -192,7 +192,7 @@ export interface GetContextPhotosetQuery extends z.infer<typeof GetContextPhotos
 /**
  * Returns next and previous photos for a photo in a set.
  */
-export const getContext = (params: GetContextPhotosetQuery): TEndpointDec => {
+export const getContext = (params: GetContextPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -213,7 +213,7 @@ export interface GetInfoPhotosetQuery extends z.infer<typeof GetInfoPhotosetQuer
 /**
  * Gets information about a photoset.
  */
-export const getInfo = (params: GetInfoPhotosetQuery): TEndpointDec => {
+export const getInfo = (params: GetInfoPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -268,7 +268,7 @@ export interface GetListPhotosetQuery extends z.infer<typeof GetListPhotosetQuer
 /**
  * Returns the photosets belonging to the specified user.
  */
-export const getList = (params: GetListPhotosetQuery): TEndpointDec => {
+export const getList = (params: GetListPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -292,7 +292,7 @@ export interface OrderSetsPhotosetQuery extends z.infer<typeof OrderSetsPhotoset
 /**
  * Set the order of photosets for the calling user.
  */
-export const orderSets = (params: OrderSetsPhotosetQuery): TEndpointDec => {
+export const orderSets = (params: OrderSetsPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -313,7 +313,7 @@ export interface RemovePhotoPhotosetQuery extends z.infer<typeof RemovePhotoPhot
 /**
  * Remove a photo from a photoset.
  */
-export const removePhoto = (params: RemovePhotoPhotosetQuery): TEndpointDec => {
+export const removePhoto = (params: RemovePhotoPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -334,7 +334,7 @@ export interface RemovePhotosPhotosetQuery extends z.infer<typeof RemovePhotosPh
 /**
  * Remove multiple photos from a photoset.
  */
-export const removePhotos = (params: RemovePhotosPhotosetQuery): TEndpointDec => {
+export const removePhotos = (params: RemovePhotosPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -356,7 +356,7 @@ export const ReorderPhotosPhotosetQuerySchema = z.object({
 
 export interface ReorderPhotosPhotosetQuery extends z.infer<typeof ReorderPhotosPhotosetQuerySchema> {}
 
-export const reorderPhotos = (params: ReorderPhotosPhotosetQuery): TEndpointDec => {
+export const reorderPhotos = (params: ReorderPhotosPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [
@@ -374,7 +374,7 @@ export interface SetPrimaryPhotoPhotosetQuery extends z.infer<typeof SetPrimaryP
 /**
  * Set photoset primary photo
  */
-export const setPrimaryPhoto = (params: SetPrimaryPhotoPhotosetQuery): TEndpointDec => {
+export const setPrimaryPhoto = (params: SetPrimaryPhotoPhotosetQuery): TEndpointDecTuple => {
   return [
     "/",
     [

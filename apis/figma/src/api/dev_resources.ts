@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { body, method, query, type TEndpointDec } from "@zemd/http-client";
+import { body, method, query, type TEndpointDecTuple } from "@zemd/http-client";
 
 export const GetDevResourcesQuerySchema = z.object({
   node_ids: z.string().optional(),
@@ -10,7 +10,7 @@ export interface GetDevResourcesQuery extends z.infer<typeof GetDevResourcesQuer
 /**
  * Get dev resources in a file.
  */
-export const getDevResources = (key: string, options?: GetDevResourcesQuery): TEndpointDec => {
+export const getDevResources = (key: string, options?: GetDevResourcesQuery): TEndpointDecTuple => {
   const transformers = [method("GET")];
   if (options) {
     transformers.push(query(GetDevResourcesQuerySchema.passthrough().parse(options)));
@@ -46,7 +46,7 @@ export interface PostDevResources extends z.infer<typeof PostDevResourcesBodySch
  * - The node already has the maximum of 10 dev resources.
  * - Another dev resource for the node has the same url.
  */
-export const postDevResources = (options: PostDevResources): TEndpointDec => {
+export const postDevResources = (options: PostDevResources): TEndpointDecTuple => {
   return [
     `/v1/dev_resources`,
     [method("POST"), body(JSON.stringify(PostDevResourcesBodySchema.passthrough().parse(options)))],
@@ -74,7 +74,7 @@ export interface PutDevResourcesBody extends z.infer<typeof PutDevResourcesBodyS
  * If there are any dev resources that cannot be updated, you may still
  * get a 200 response. These resources will show up in the errors array.
  */
-export const putDevResources = (options: PutDevResourcesBody): TEndpointDec => {
+export const putDevResources = (options: PutDevResourcesBody): TEndpointDecTuple => {
   return [
     `/v1/dev_resources`,
     [method("PUT"), body(JSON.stringify(PutDevResourcesBodySchema.passthrough().parse(options)))],
@@ -84,6 +84,6 @@ export const putDevResources = (options: PutDevResourcesBody): TEndpointDec => {
 /**
  * Delete a dev resources from a file.
  */
-export const deleteDevResources = (key: string, devResourceId: string): TEndpointDec => {
+export const deleteDevResources = (key: string, devResourceId: string): TEndpointDecTuple => {
   return [`/v1/files/${key}/dev_resources/${devResourceId}`, [method("DELETE")]];
 };

@@ -1,4 +1,4 @@
-import { method, query, type TEndpointDec } from "@zemd/http-client";
+import { method, query, type TEndpointDecTuple } from "@zemd/http-client";
 import { z } from "zod";
 
 export const GetUserCommentsQuerySchema = z.object({
@@ -24,7 +24,7 @@ export interface GetUserCommentsQuery extends z.infer<typeof GetUserCommentsQuer
  * Returns a list of recent activity on photos commented on by the calling user.
  * Do not poll this method more than once an hour.
  */
-export const userComments = (params: GetUserCommentsQuery): TEndpointDec => {
+export const userComments = (params: GetUserCommentsQuery): TEndpointDecTuple => {
   return [
     `/`,
     [
@@ -62,7 +62,7 @@ export const GetUserPhotosQuerySchema = z.object({
 
 export interface GetUserPhotosQuery extends z.infer<typeof GetUserPhotosQuerySchema> {}
 
-export const userPhotos = (params: GetUserPhotosQuery): TEndpointDec => {
+export const userPhotos = (params: GetUserPhotosQuery): TEndpointDecTuple => {
   return [
     `/`,
     [

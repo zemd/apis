@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { method, query, type TEndpointDec } from "@zemd/http-client";
+import { method, query, type TEndpointDecTuple } from "@zemd/http-client";
 
 export const GetActivityLogsQuerySchema = z.object({
   events: z.string().optional(),
@@ -14,7 +14,7 @@ export interface GetActivityLogsQuery extends z.infer<typeof GetActivityLogsQuer
 /**
  * Returns a list of activity log events
  */
-export const getActivityLogs = (options?: GetActivityLogsQuery): TEndpointDec => {
+export const getActivityLogs = (options?: GetActivityLogsQuery): TEndpointDecTuple => {
   const transformers = [method("GET")];
   if (options) {
     transformers.push(query(GetActivityLogsQuerySchema.passthrough().parse(options)));
