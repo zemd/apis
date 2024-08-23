@@ -215,7 +215,7 @@ export const createBuildEndpointFn = <ArgExtractJsonType extends boolean>({
       return async (...params: Parameters<ArgFn>): Promise<ArgResult> => {
         const res = await endpoint(endpointDecFn as ArgFn)(...params);
         if (mapOrValidateJSON) {
-          return mapOrValidateJSON(res.json());
+          return mapOrValidateJSON(await res.json());
         }
         return res.json() as ArgResult;
       };
