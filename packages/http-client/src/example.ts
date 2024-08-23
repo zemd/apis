@@ -53,9 +53,7 @@ const createOAuth2Client = (opts: {
   };
 };
 
-const bearerToken = (
-  oauthClient: ReturnType<typeof createOAuth2Client>,
-): TFetchTransformer => {
+const bearerToken = (oauthClient: ReturnType<typeof createOAuth2Client>): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...args: TFetchFnParams) => {
     const [input, init] = args;
     const token = await oauthClient.token();
@@ -73,10 +71,7 @@ function apiAction(param: number): TEndpointDecTuple {
   return [`/some/path/${param}`, [method("GET")]];
 }
 
-const createApiSdk = (
-  oauthClient: ReturnType<typeof createOAuth2Client>,
-  opts: { debug?: boolean } = {},
-) => {
+const createApiSdk = (oauthClient: ReturnType<typeof createOAuth2Client>, opts: { debug?: boolean } = {}) => {
   const build = createBuildEndpointFn({
     baseUrl: "https://api.example.com",
     transformers: [bearerToken(oauthClient)],

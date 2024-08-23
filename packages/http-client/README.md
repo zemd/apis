@@ -17,10 +17,7 @@ pnpm add @zemd/http-client
 ```ts
 import { compose, method, json } from "@zemd/http-client";
 
-const myfetch = compose([
-  method("POST"),
-  json(),
-], fetch);
+const myfetch = compose([method("POST"), json()], fetch);
 
 const resp = await myfetch("https://example.com");
 ```
@@ -31,7 +28,6 @@ together and creating your client.
 A real example you can find in `../apis/` folder.
 
 An example of how you can use the library in your project see [src/example.ts](./src/example.ts)
-
 
 ## License
 

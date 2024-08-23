@@ -1,9 +1,6 @@
 export type TFetchFn = typeof fetch;
 export type TFetchFnParams = Parameters<TFetchFn>;
-export type TFetchTransformer = (
-  fetchFn: TFetchFn,
-  ...params: TFetchFnParams
-) => ReturnType<TFetchFn>;
+export type TFetchTransformer = (fetchFn: TFetchFn, ...params: TFetchFnParams) => ReturnType<TFetchFn>;
 
 /**
  * Compose a list of transformers into a single fetch function.
@@ -16,10 +13,7 @@ export type TFetchTransformer = (
  * ], fetch);
  * ```
  */
-export const compose = (
-  transformers: Array<TFetchTransformer>,
-  fetchFn: TFetchFn = fetch,
-): TFetchFn => {
+export const compose = (transformers: Array<TFetchTransformer>, fetchFn: TFetchFn = fetch): TFetchFn => {
   return transformers.reduceRight<TFetchFn>((acc, transformer) => {
     const res: TFetchFn = (...params: TFetchFnParams) => {
       return transformer(acc, ...params);
@@ -64,10 +58,7 @@ export const json = (): TFetchTransformer => {
   };
 };
 
-const modifyUrlPath = (
-  input: TFetchFnParams[0],
-  prefix: string,
-): TFetchFnParams[0] => {
+const modifyUrlPath = (input: TFetchFnParams[0], prefix: string): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
     urlObj.pathname = `${prefix}${urlObj.pathname}`;
@@ -93,10 +84,7 @@ const modifyUrlPath = (
   return `${prefix}${input}`;
 };
 
-const modifyUrlQuery = (
-  input: TFetchFnParams[0],
-  query: object,
-): TFetchFnParams[0] => {
+const modifyUrlQuery = (input: TFetchFnParams[0], query: object): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
     urlObj.search = `${new URLSearchParams([...Array.from(urlObj.searchParams.entries()), ...Object.entries(query)])}`;
@@ -147,29 +135,20 @@ export const body = (obj: BodyInit): TFetchTransformer => {
   };
 };
 
-export const debug = (
-  fn: Function = (p: any) => console.debug(JSON.stringify(p, null, 4)),
-): TFetchTransformer => {
+export const debug = (fn: Function = (p: any) => console.debug(JSON.stringify(p, null, 4))): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     fn(params);
     return fetchFn(...params);
   };
 };
 
-export type TEndpointDecTuple /*<ArgResult = any>*/ = [
-  string,
-  Array<TFetchTransformer>,
-  ...any[],
-]; // [url, transformers, ...rest]
+export type TEndpointDecTuple /*<ArgResult = any>*/ = [string, Array<TFetchTransformer>, ...any[]]; // [url, transformers, ...rest]
 
-export type TEndpointDeclarationFn = (
-  ...params: Array<any>
-) => TEndpointDecTuple /*<any>*/;
+export type TEndpointDeclarationFn = (...params: Array<any>) => TEndpointDecTuple /*<any>*/;
 
-export type TEndpointResFn<
-  ArgEndpointDeclarationFnParams extends Array<any>,
-  ArgResult = Response,
-> = (...params: ArgEndpointDeclarationFnParams) => Promise<ArgResult>;
+export type TEndpointResFn<ArgEndpointDeclarationFnParams extends Array<any>, ArgResult = Response> = (
+  ...params: ArgEndpointDeclarationFnParams
+) => Promise<ArgResult>;
 
 /**
  * Endpoint is a function identical to fetch with pre-defined parameters and input arguments.
@@ -184,9 +163,7 @@ export const endpoint = <
 >(
   fn: ArgEndpointDeclarationFn,
 ): ArgResFn => {
-  const res = (
-    ...params: ArgEndpointDeclarationFnParams
-  ): Promise<Response> => {
+  const res = (...params: ArgEndpointDeclarationFnParams): Promise<Response> => {
     const declaration = fn(...params);
     const [url, transformers] = declaration;
     const fetchFn = compose(transformers, fetch);
@@ -224,21 +201,14 @@ export const createBuildEndpointFn = <ArgExtractJsonType extends boolean>({
     fn: ArgFn,
     mapOrValidateJSON?: ArgMapOrValidateFn,
   ): TEndpointResFn<Parameters<ArgFn>, ArgResult> => {
-    const commonTransformers: Array<TFetchTransformer> = [
-      prefix(baseUrl),
-      json(),
-    ];
+    const commonTransformers: Array<TFetchTransformer> = [prefix(baseUrl), json()];
     if (opts.debug) {
       commonTransformers.push(debug());
     }
 
     const endpointDecFn = (...params: Parameters<ArgFn>): TEndpointDecTuple => {
       const [path, transformers, ...rest] = fn(...params);
-      return [
-        path,
-        [...commonTransformers, ...(opts.transformers ?? []), ...transformers],
-        ...rest,
-      ];
+      return [path, [...commonTransformers, ...(opts.transformers ?? []), ...transformers], ...rest];
     };
 
     if (exractJsonFromResponse) {
@@ -251,9 +221,6 @@ export const createBuildEndpointFn = <ArgExtractJsonType extends boolean>({
       };
     }
 
-    return endpoint(endpointDecFn as ArgFn) as TEndpointResFn<
-      Parameters<ArgFn>,
-      ArgResult
-    >;
+    return endpoint(endpointDecFn as ArgFn) as TEndpointResFn<Parameters<ArgFn>, ArgResult>;
   };
 };
