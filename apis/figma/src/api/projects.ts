@@ -11,7 +11,7 @@ import { method, query } from "@zemd/http-client";
  * the word team and before your team name.
  */
 export const getTeamProjects = (teamId: string) => {
-  return [`/v1/teams/${teamId}/projects`, [method("GET")]];
+  return { url: `/v1/teams/${teamId}/projects`, transformers: [method("GET")] };
 };
 
 const GetProjectFilesQuerySchema = z.object({
@@ -34,5 +34,5 @@ export const getProjectFiles = (
       query(GetProjectFilesQuerySchema.passthrough().parse(options)),
     );
   }
-  return [`/v1/projects/${projectId}/files`, transformers];
+  return { url: `/v1/projects/${projectId}/files`, transformers };
 };

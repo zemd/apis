@@ -26,7 +26,7 @@ export const figma = (
   const build = createBuildEndpointFn({
     baseUrl: opts?.url ?? "https://api.figma.com",
     transformers: [figmaToken(accessToken)],
-    debug: opts?.debug,
+    debug: !!opts?.debug,
   });
 
   return {

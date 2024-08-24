@@ -11,7 +11,7 @@ export const flickr = (
     transformers: [
       query({ api_key: apiKey, format: "json", nojsoncallback: 1 }),
     ],
-    debug: opts?.debug,
+    debug: !!opts?.debug,
   });
 
   return {
