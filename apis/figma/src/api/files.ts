@@ -1,4 +1,4 @@
-import { method, query, type TEndpointDecTuple } from "@zemd/http-client";
+import { method, query } from "@zemd/http-client";
 import { z } from "zod";
 
 export const GetFileQuerySchema = z.object({
@@ -23,14 +23,14 @@ export interface GetFileQuery extends z.infer<typeof GetFileQuerySchema> {}
  * The components key contains a mapping from node IDs to component metadata.
  * This is to help you determine which components each instance comes from.
  */
-export const getFile = (key: string, options?: GetFileQuery): TEndpointDecTuple => {
+export const getFile = (key: string, options?: GetFileQuery) => {
   const transformers = [method("GET")];
 
   if (options) {
     transformers.push(query(GetFileQuerySchema.passthrough().parse(options)));
   }
 
-  return [`/files/${key}`, transformers];
+  return { url: `/files/${key}`, transformers };
 };
 
 export const GetFileNodesQuerySchema = z.object({
@@ -41,7 +41,8 @@ export const GetFileNodesQuerySchema = z.object({
   plugin_data: z.string().optional(),
 });
 
-export interface GetFileNodesQuery extends z.infer<typeof GetFileNodesQuerySchema> {}
+export interface GetFileNodesQuery
+  extends z.infer<typeof GetFileNodesQuerySchema> {}
 
 /**
  * Returns the nodes referenced to by `:ids` as a JSON object. The nodes are
@@ -66,8 +67,14 @@ export interface GetFileNodesQuery extends z.infer<typeof GetFileNodesQuerySchem
  * Important: the nodes map may contain values that are null . This may be due
  * to the node id not existing within the specified file.
  */
-export const getFileNodes = (key: string, options: GetFileNodesQuery): TEndpointDecTuple => {
-  return [`/files/${key}/nodes`, [method("GET"), query(GetFileNodesQuerySchema.passthrough().parse(options))]];
+export const getFileNodes = (key: string, options: GetFileNodesQuery) => {
+  return {
+    url: `/files/${key}/nodes`,
+    transformers: [
+      method("GET"),
+      query(GetFileNodesQuerySchema.passthrough().parse(options)),
+    ],
+  };
 };
 
 export const GetImageQuerySchema = z.object({
@@ -103,8 +110,14 @@ export interface GetImageQuery extends z.infer<typeof GetImageQuerySchema> {}
  * To render multiple images from the same file, use the ids query parameter
  * to specify multiple node ids.
  */
-export const getImage = (key: string, options: GetImageQuery): TEndpointDecTuple => {
-  return [`/images/${key}`, [method("GET"), query(GetImageQuerySchema.passthrough().parse(options))]];
+export const getImage = (key: string, options: GetImageQuery) => {
+  return {
+    url: `/images/${key}`,
+    transformers: [
+      method("GET"),
+      query(GetImageQuerySchema.passthrough().parse(options)),
+    ],
+  };
 };
 
 /**
@@ -119,6 +132,6 @@ export const getImage = (key: string, options: GetImageQuery): TEndpointDecTuple
  * references are located in the output of the GET files endpoint under the imageRef
  * attribute in a Paint.
  */
-export const getImageFills = (key: string): TEndpointDecTuple => {
-  return [`/files/${key}/images`, [method("GET")]];
+export const getImageFills = (key: string) => {
+  return { url: `/files/${key}/images`, transformers: [method("GET")] };
 };

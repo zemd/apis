@@ -10,42 +10,24 @@ import * as payments from "./api/payments.js";
 import * as variables from "./api/variables.js";
 import * as devResources from "./api/dev_resources.js";
 import {
-  debug,
-  endpoint,
   header,
-  json,
-  prefix,
-  type TEndpointDecTuple,
-  type TEndpointDeclarationFn,
-  type TEndpointResFn,
   type TFetchTransformer,
+  createBuildEndpointFn,
 } from "@zemd/http-client";
 
 export const figmaToken = (value: string): TFetchTransformer => {
   return header("X-Figma-Token", value);
 };
 
-export const figma = (accessToken: string, opts?: { debug?: boolean; url?: string }) => {
-  const build = <ArgFn extends TEndpointDeclarationFn, ArgFnParams extends Parameters<ArgFn>>(
-    fn: ArgFn,
-  ): TEndpointResFn<ArgFnParams> => {
-    const globalTransformers: Array<TFetchTransformer> = [
-      prefix(opts?.url ?? "https://api.figma.com"),
-      json(),
-      figmaToken(accessToken),
-    ];
-
-    if (opts?.debug === true) {
-      globalTransformers.push(debug());
-    }
-
-    const endpointDecFn = (...params: ArgFnParams): TEndpointDecTuple => {
-      const [path, transformers]: TEndpointDecTuple = fn(...params);
-      return [path, [...transformers, ...globalTransformers]];
-    };
-
-    return endpoint(endpointDecFn as ArgFn);
-  };
+export const figma = (
+  accessToken: string,
+  opts?: { debug?: boolean; url?: string },
+) => {
+  const build = createBuildEndpointFn({
+    baseUrl: opts?.url ?? "https://api.figma.com",
+    transformers: [figmaToken(accessToken)],
+    debug: opts?.debug,
+  });
 
   return {
     files: {

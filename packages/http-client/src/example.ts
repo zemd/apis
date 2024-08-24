@@ -2,7 +2,6 @@ import {
   body,
   createBuildEndpointFn,
   method,
-  type TEndpointDecTuple,
   type TFetchFn,
   type TFetchFnParams,
   type TFetchTransformer,
@@ -23,8 +22,12 @@ const tokenEndpoint = (payload: {
   client_secret: string;
   audience: string;
   //...
-}): TEndpointDecTuple => {
-  return ["/token", [method("POST"), body(JSON.stringify(payload))]];
+}) => {
+  return {
+    url: "/token",
+    transformers: [method("POST"), body(JSON.stringify(payload))],
+    responseParser: (json: any): Token => json,
+  };
 };
 
 const createOAuth2Client = (opts: {
@@ -34,13 +37,10 @@ const createOAuth2Client = (opts: {
   const build = createBuildEndpointFn({
     baseUrl: "https://auth.example.com/oauth",
     debug: !!opts.debug,
-    exractJsonFromResponse: true,
   });
 
   let cachedToken: Token | null = null;
-  const fetchToken = build(tokenEndpoint, (json: any): Token => {
-    return json;
-  });
+  const fetchToken = build(tokenEndpoint);
 
   return {
     token: async (skipCache: boolean = false): Promise<Token> => {
@@ -53,7 +53,9 @@ const createOAuth2Client = (opts: {
   };
 };
 
-const bearerToken = (oauthClient: ReturnType<typeof createOAuth2Client>): TFetchTransformer => {
+const bearerToken = (
+  oauthClient: ReturnType<typeof createOAuth2Client>,
+): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...args: TFetchFnParams) => {
     const [input, init] = args;
     const token = await oauthClient.token();
@@ -67,16 +69,21 @@ const bearerToken = (oauthClient: ReturnType<typeof createOAuth2Client>): TFetch
   };
 };
 
-function apiAction(param: number): TEndpointDecTuple {
-  return [`/some/path/${param}`, [method("GET")]];
+function apiAction(param: number) {
+  return {
+    url: `/some/path/${param}`,
+    transformers: [method("GET")],
+  };
 }
 
-const createApiSdk = (oauthClient: ReturnType<typeof createOAuth2Client>, opts: { debug?: boolean } = {}) => {
+const createApiSdk = (
+  oauthClient: ReturnType<typeof createOAuth2Client>,
+  opts: { debug?: boolean } = {},
+) => {
   const build = createBuildEndpointFn({
     baseUrl: "https://api.example.com",
     transformers: [bearerToken(oauthClient)],
     debug: !!opts.debug,
-    exractJsonFromResponse: false,
   });
   return {
     someAction: build(apiAction),
@@ -92,5 +99,6 @@ const oauth = createOAuth2Client({
 });
 const sdk = createApiSdk(oauth, {});
 
-// @ts-ignore
 const result = await sdk.someAction(123);
+const json = await result.json();
+console.log(json);

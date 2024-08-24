@@ -1,21 +1,27 @@
 import { z } from "zod";
-import { body, method, query, type TEndpointDecTuple } from "@zemd/http-client";
+import { body, method, query } from "@zemd/http-client";
 
 export const GetDevResourcesQuerySchema = z.object({
   node_ids: z.string().optional(),
 });
 
-export interface GetDevResourcesQuery extends z.infer<typeof GetDevResourcesQuerySchema> {}
+export interface GetDevResourcesQuery
+  extends z.infer<typeof GetDevResourcesQuerySchema> {}
 
 /**
  * Get dev resources in a file.
  */
-export const getDevResources = (key: string, options?: GetDevResourcesQuery): TEndpointDecTuple => {
+export const getDevResources = (
+  key: string,
+  options?: GetDevResourcesQuery,
+) => {
   const transformers = [method("GET")];
   if (options) {
-    transformers.push(query(GetDevResourcesQuerySchema.passthrough().parse(options)));
+    transformers.push(
+      query(GetDevResourcesQuerySchema.passthrough().parse(options)),
+    );
   }
-  return [`/v1/files/${key}/dev_resources`, transformers];
+  return { url: `/v1/files/${key}/dev_resources`, transformers };
 };
 
 const DevResourceCreate = z.object({
@@ -29,7 +35,8 @@ export const PostDevResourcesBodySchema = z.object({
   dev_resources: z.array(DevResourceCreate),
 });
 
-export interface PostDevResources extends z.infer<typeof PostDevResourcesBodySchema> {}
+export interface PostDevResources
+  extends z.infer<typeof PostDevResourcesBodySchema> {}
 
 /**
  * Bulk create dev resources across multiple files.
@@ -46,11 +53,16 @@ export interface PostDevResources extends z.infer<typeof PostDevResourcesBodySch
  * - The node already has the maximum of 10 dev resources.
  * - Another dev resource for the node has the same url.
  */
-export const postDevResources = (options: PostDevResources): TEndpointDecTuple => {
-  return [
-    `/v1/dev_resources`,
-    [method("POST"), body(JSON.stringify(PostDevResourcesBodySchema.passthrough().parse(options)))],
-  ];
+export const postDevResources = (options: PostDevResources) => {
+  return {
+    url: `/v1/dev_resources`,
+    transformers: [
+      method("POST"),
+      body(
+        JSON.stringify(PostDevResourcesBodySchema.passthrough().parse(options)),
+      ),
+    ],
+  };
 };
 
 const DevResourceUpdate = z.object({
@@ -63,7 +75,8 @@ export const PutDevResourcesBodySchema = z.object({
   dev_resources: z.array(DevResourceUpdate),
 });
 
-export interface PutDevResourcesBody extends z.infer<typeof PutDevResourcesBodySchema> {}
+export interface PutDevResourcesBody
+  extends z.infer<typeof PutDevResourcesBodySchema> {}
 
 /**
  * Bulk update dev resources across multiple files.
@@ -74,16 +87,24 @@ export interface PutDevResourcesBody extends z.infer<typeof PutDevResourcesBodyS
  * If there are any dev resources that cannot be updated, you may still
  * get a 200 response. These resources will show up in the errors array.
  */
-export const putDevResources = (options: PutDevResourcesBody): TEndpointDecTuple => {
-  return [
-    `/v1/dev_resources`,
-    [method("PUT"), body(JSON.stringify(PutDevResourcesBodySchema.passthrough().parse(options)))],
-  ];
+export const putDevResources = (options: PutDevResourcesBody) => {
+  return {
+    url: `/v1/dev_resources`,
+    transformers: [
+      method("PUT"),
+      body(
+        JSON.stringify(PutDevResourcesBodySchema.passthrough().parse(options)),
+      ),
+    ],
+  };
 };
 
 /**
  * Delete a dev resources from a file.
  */
-export const deleteDevResources = (key: string, devResourceId: string): TEndpointDecTuple => {
-  return [`/v1/files/${key}/dev_resources/${devResourceId}`, [method("DELETE")]];
+export const deleteDevResources = (key: string, devResourceId: string) => {
+  return {
+    url: `/v1/files/${key}/dev_resources/${devResourceId}`,
+    transformers: [method("DELETE")],
+  };
 };

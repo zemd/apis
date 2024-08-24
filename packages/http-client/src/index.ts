@@ -1,19 +1,28 @@
 export type TFetchFn = typeof fetch;
 export type TFetchFnParams = Parameters<TFetchFn>;
-export type TFetchTransformer = (fetchFn: TFetchFn, ...params: TFetchFnParams) => ReturnType<TFetchFn>;
+export type TFetchTransformer = (
+  fetchFn: TFetchFn,
+  ...params: TFetchFnParams
+) => ReturnType<TFetchFn>;
 
 /**
- * Compose a list of transformers into a single fetch function.
- * Example:
- *
- * ```
- * const POST = compose([
- *  method('POST'),
- *  json(),
- * ], fetch);
- * ```
- */
-export const compose = (transformers: Array<TFetchTransformer>, fetchFn: TFetchFn = fetch): TFetchFn => {
+  * Composes a list of transformers into a single fetch function.
+  * Example:
+  * ```
+  * const POST = compose([
+  *  method('POST'),
+  *  json(),
+  * ], fetch);
+  * ```
+
+  * @param transformers An array of transformer functions to be applied
+  * @param fetchFn The base fetch function to be transformed (defaults to global fetch)
+  * @returns A new fetch function that applies all the transformers in order
+  */
+export const compose = (
+  transformers: Array<TFetchTransformer>,
+  fetchFn: TFetchFn = fetch,
+): TFetchFn => {
   return transformers.reduceRight<TFetchFn>((acc, transformer) => {
     const res: TFetchFn = (...params: TFetchFnParams) => {
       return transformer(acc, ...params);
@@ -22,6 +31,11 @@ export const compose = (transformers: Array<TFetchTransformer>, fetchFn: TFetchF
   }, fetchFn);
 };
 
+/**
+ * Set the HTTP method for the request.
+ * @param name The HTTP method name (e.g., 'GET', 'POST', 'PUT', 'DELETE', etc.)
+ * @returns A transformer function that sets the specified HTTP method
+ */
 export const method = (name: string): TFetchTransformer => {
   return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
@@ -32,6 +46,12 @@ export const method = (name: string): TFetchTransformer => {
   };
 };
 
+/**
+ * Add a header to the request.
+ * @param key The header key
+ * @param value The header value
+ * @returns A transformer function that adds the specified header
+ */
 export const header = (key: string, value: string): TFetchTransformer => {
   return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
@@ -45,6 +65,10 @@ export const header = (key: string, value: string): TFetchTransformer => {
   };
 };
 
+/**
+ * Set the Content-Type header to 'application/json'.
+ * @returns A transformer function that adds the JSON Content-Type header
+ */
 export const json = (): TFetchTransformer => {
   return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
@@ -58,7 +82,10 @@ export const json = (): TFetchTransformer => {
   };
 };
 
-const modifyUrlPath = (input: TFetchFnParams[0], prefix: string): TFetchFnParams[0] => {
+const modifyUrlPath = (
+  input: TFetchFnParams[0],
+  prefix: string,
+): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
     urlObj.pathname = `${prefix}${urlObj.pathname}`;
@@ -84,7 +111,10 @@ const modifyUrlPath = (input: TFetchFnParams[0], prefix: string): TFetchFnParams
   return `${prefix}${input}`;
 };
 
-const modifyUrlQuery = (input: TFetchFnParams[0], query: object): TFetchFnParams[0] => {
+const modifyUrlQuery = (
+  input: TFetchFnParams[0],
+  query: object,
+): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
     urlObj.search = `${new URLSearchParams([...Array.from(urlObj.searchParams.entries()), ...Object.entries(query)])}`;
@@ -110,6 +140,11 @@ const modifyUrlQuery = (input: TFetchFnParams[0], query: object): TFetchFnParams
   return `${pathname}?${new URLSearchParams([...new URLSearchParams(search).entries(), ...Object.entries(query)])}`;
 };
 
+/**
+ * Sets the URL prefix for the request.
+ * @param input The path to be added to the URL path in the beginning
+ * @returns A transformer function that adds the specified prefix
+ */
 export const prefix = (value: string): TFetchTransformer => {
   return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
@@ -118,6 +153,11 @@ export const prefix = (value: string): TFetchTransformer => {
   };
 };
 
+/**
+ * Adds query parameters to the request URL.
+ * @param obj An object containing the query parameters as key-value pairs
+ * @returns A transformer function that adds the specified query parameters to the URL
+ */
 export const query = (obj: object): TFetchTransformer => {
   return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
@@ -125,6 +165,11 @@ export const query = (obj: object): TFetchTransformer => {
   };
 };
 
+/**
+ * Sets the request body.
+ * @param obj The body to be sent with the request
+ * @returns A transformer function that sets the specified body
+ */
 export const body = (obj: BodyInit): TFetchTransformer => {
   return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
@@ -135,92 +180,185 @@ export const body = (obj: BodyInit): TFetchTransformer => {
   };
 };
 
-export const debug = (fn: Function = (p: any) => console.debug(JSON.stringify(p, null, 4))): TFetchTransformer => {
+/**
+ * Creates a transformer that logs request parameters for debugging purposes.
+ * @param fn Optional custom logging function (defaults to console.debug with JSON.stringify)
+ * @returns A transformer function that logs the request parameters before passing them to the next transformer
+ */
+export const debug = (
+  fn: Function = (p: any) => console.debug(JSON.stringify(p, null, 4)),
+): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     fn(params);
     return fetchFn(...params);
   };
 };
 
-export type TEndpointDecTuple /*<ArgResult = any>*/ = [string, Array<TFetchTransformer>, ...any[]]; // [url, transformers, ...rest]
-
-export type TEndpointDeclarationFn = (...params: Array<any>) => TEndpointDecTuple /*<any>*/;
-
-export type TEndpointResFn<ArgEndpointDeclarationFnParams extends Array<any>, ArgResult = Response> = (
-  ...params: ArgEndpointDeclarationFnParams
-) => Promise<ArgResult>;
-
 /**
- * Endpoint is a function identical to fetch with pre-defined parameters and input arguments.
- * Endpoint function follow the fetch logic, so it is unaware of the type that .json() method returns.
- * If you want have additional type-checking for the response, you can create another wrapper.
- * An example of such a wrapper see `createBuildEndpointFn` function.
+ * Creates a transformer that retries failed requests.
+ * @param maxRetries The maximum number of retry attempts (default: 3)
+ * @param delay The delay between retries in milliseconds (default: 1000)
+ * @returns A transformer function that retries the request on failure
  */
-export const endpoint = <
-  ArgEndpointDeclarationFn extends TEndpointDeclarationFn,
-  ArgEndpointDeclarationFnParams extends Parameters<ArgEndpointDeclarationFn>,
-  ArgResFn extends TEndpointResFn<ArgEndpointDeclarationFnParams>,
->(
-  fn: ArgEndpointDeclarationFn,
-): ArgResFn => {
-  const res = (...params: ArgEndpointDeclarationFnParams): Promise<Response> => {
-    const declaration = fn(...params);
-    const [url, transformers] = declaration;
-    const fetchFn = compose(transformers, fetch);
-    return fetchFn(url);
+export const retry = (
+  maxRetries: number = 3,
+  delay: number = 1000,
+): TFetchTransformer => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+    let lastError;
+    for (let i = 0; i < maxRetries; i += 1) {
+      try {
+        return await fetchFn(...params);
+      } catch (error) {
+        lastError = error;
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+    throw lastError;
   };
-  return res as ArgResFn;
 };
 
-type TCreateBuildOptions<ArgExtractJsonType> = {
+const cacheStore = new Map<string, { data: any; timestamp: number }>();
+
+const getCacheKey = (input: string | URL | Request): string => {
+  if (input instanceof Request) {
+    return input.url;
+  }
+  if (input instanceof URL) {
+    return input.href;
+  }
+  return input;
+};
+
+/**
+ * Creates a transformer that caches GET requests for a specified duration.
+ * CATION: The order of transformers is important. The cache transformer MUST go after the method transformer.
+ *
+ * @param maxAge The maximum age of the cache in milliseconds (default: 60000 ms or 1 minute)
+ * @returns A transformer function that caches GET requests and returns cached responses if available
+ */
+export const cache = (maxAge: number = 60000): TFetchTransformer => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+    const [input, init] = params;
+    if (init?.method?.toUpperCase() !== "GET") {
+      return fetchFn(...params);
+    }
+
+    const cacheKey = getCacheKey(input);
+    const cached = cacheStore.get(cacheKey);
+
+    if (cached && Date.now() - cached.timestamp < maxAge) {
+      return Promise.resolve(
+        new Response(JSON.stringify(cached.data), { status: 200 }),
+      );
+    }
+
+    const response = await fetchFn(...params);
+    const data = await response.json();
+    cacheStore.set(cacheKey, { data, timestamp: Date.now() });
+    return new Response(JSON.stringify(data), { status: 200 });
+  };
+};
+
+/**
+ * Represents the specification for declaring an endpoint.
+ */
+export type TEndpointDeclarationSpec = {
+  url: string;
+  transformers: Array<TFetchTransformer>;
+  responseParser?: (data: any) => any;
+};
+
+/**
+ * Represents a function that declares an endpoint.
+ * This function takes any number of parameters and returns a TEndpointDeclarationSpec.
+ */
+export type TEndpointDeclarationFn = (
+  ...params: Array<any>
+) => TEndpointDeclarationSpec;
+
+export type TEndpointReturnFn<
+  ArgEndpointDeclarationFnParams extends Array<any>,
+  ArgResult = Response,
+> = (...params: ArgEndpointDeclarationFnParams) => Promise<ArgResult>;
+
+/**
+ * Creates an endpoint function based on the provided declaration function.
+ * NOTE: Endpoint - is a function that executes a request with the specified parameters and
+ *                  returns a Promise of the result.
+ *
+ * @param fn The endpoint declaration function
+ * @param parseResponse The response parsing method, either 'json' or 'text' (default: 'json')
+ * @returns A function that executes the endpoint with the given parameters and returns a Promise of the result
+ */
+export const endpoint = <
+  ArgDecFn extends TEndpointDeclarationFn,
+  ArgParams extends Parameters<ArgDecFn>,
+  ReturnSpec extends ReturnType<ArgDecFn>,
+  ArgResult = ReturnSpec["responseParser"] extends (data: any) => infer R
+    ? R
+    : Response,
+>(
+  fn: ArgDecFn,
+  parseResponse: "json" | "text" = "json",
+): TEndpointReturnFn<ArgParams, ArgResult> => {
+  const res = async (...params: ArgParams): Promise<ArgResult> => {
+    const declaration = fn(...params);
+    const { url, transformers, responseParser } = declaration;
+    const fetchFn = compose(transformers, fetch);
+    const response = await fetchFn(url);
+    if (typeof responseParser === "function") {
+      const parsed = await response[parseResponse]();
+      return responseParser(parsed);
+    }
+    return response as ArgResult;
+  };
+  return res;
+};
+
+type TCreateBuildOptions = {
   baseUrl: string;
   transformers?: Array<TFetchTransformer>;
   debug?: boolean;
-  exractJsonFromResponse?: ArgExtractJsonType;
 };
 
 /**
- * Creates a build function that wraps endpoint function and provides common transformers,
- * and handles some configuration options that can ease the development.
- * Is not required to use, and can be used as an example for custom build function.
+ * Creates a function to build endpoints with common configurations. This is utility function that is
+ * not mandatory to use, but can help to reduce boilerplate code.
+ *
+ * @param options An object containing configuration options:
+ *   - baseUrl: The base URL for all endpoints
+ *   - transformers: Optional array of additional transformers to apply to all endpoints
+ *   - debug: Optional flag to enable debug logging for all endpoints
+ *
+ * @returns A function that takes an endpoint declaration function and returns a configured endpoint
  */
-export const createBuildEndpointFn = <ArgExtractJsonType extends boolean>({
+export const createBuildEndpointFn = ({
   baseUrl,
-  exractJsonFromResponse,
   ...opts
-}: TCreateBuildOptions<ArgExtractJsonType>) => {
-  return <
-    ArgFn extends TEndpointDeclarationFn,
-    ArgMapOrValidateFn extends (...args: any[]) => any,
-    ArgResult extends ArgExtractJsonType extends true
-      ? ArgMapOrValidateFn extends undefined
-        ? never
-        : ReturnType<ArgMapOrValidateFn>
-      : Response,
-  >(
-    fn: ArgFn,
-    mapOrValidateJSON?: ArgMapOrValidateFn,
-  ): TEndpointResFn<Parameters<ArgFn>, ArgResult> => {
-    const commonTransformers: Array<TFetchTransformer> = [prefix(baseUrl), json()];
+}: TCreateBuildOptions) => {
+  return <ArgDecFn extends TEndpointDeclarationFn>(fn: ArgDecFn) => {
+    const commonTransformers: Array<TFetchTransformer> = [
+      prefix(baseUrl),
+      json(),
+    ];
     if (opts.debug) {
       commonTransformers.push(debug());
     }
 
-    const endpointDecFn = (...params: Parameters<ArgFn>): TEndpointDecTuple => {
-      const [path, transformers, ...rest] = fn(...params);
-      return [path, [...commonTransformers, ...(opts.transformers ?? []), ...transformers], ...rest];
+    const endpointDecFn = (...params: Parameters<ArgDecFn>) => {
+      const { url, transformers, ...rest } = fn(...params);
+      return {
+        url,
+        transformers: [
+          ...commonTransformers,
+          ...(opts.transformers ?? []),
+          ...transformers,
+        ],
+        ...rest,
+      };
     };
 
-    if (exractJsonFromResponse) {
-      return async (...params: Parameters<ArgFn>): Promise<ArgResult> => {
-        const res = await endpoint(endpointDecFn as ArgFn)(...params);
-        if (mapOrValidateJSON) {
-          return mapOrValidateJSON(await res.json());
-        }
-        return res.json() as ArgResult;
-      };
-    }
-
-    return endpoint(endpointDecFn as ArgFn) as TEndpointResFn<Parameters<ArgFn>, ArgResult>;
+    return endpoint(endpointDecFn as ArgDecFn, "json");
   };
 };
