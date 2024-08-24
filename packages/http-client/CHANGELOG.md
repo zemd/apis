@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 3.0.0
+
+### Major Changes
+
+- 3772bdf: improving type safety for getting results instead Response, adding tests
+
 ## 2.0.0
 
 ### Major Changes
