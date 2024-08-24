@@ -1,5 +1,16 @@
 # @zemd/figma-rest-api
 
+## 2.0.0
+
+### Major Changes
+
+- 3772bdf: improving type safety for getting results instead Response, adding tests
+
+### Patch Changes
+
+- Updated dependencies [3772bdf]
+  - @zemd/http-client@3.0.0
+
 ## 1.0.2
 
 ### Patch Changes
