@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 3.0.1
+
+### Patch Changes
+
+- 4dfc2a3: improving debug transformer
+
 ## 3.0.0
 
 ### Major Changes
