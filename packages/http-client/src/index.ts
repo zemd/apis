@@ -319,7 +319,7 @@ export const endpoint = <
 type TCreateBuildOptions = {
   baseUrl: string;
   transformers?: Array<TFetchTransformer>;
-  debug?: boolean;
+  debug?: boolean | TFetchTransformer;
 };
 
 /**
@@ -342,9 +342,6 @@ export const createBuildEndpointFn = ({
       prefix(baseUrl),
       json(),
     ];
-    if (opts.debug) {
-      commonTransformers.push(debug());
-    }
 
     const endpointDecFn = (...params: Parameters<ArgDecFn>) => {
       const { url, transformers, ...rest } = fn(...params);
@@ -354,7 +351,13 @@ export const createBuildEndpointFn = ({
           ...commonTransformers,
           ...(opts.transformers ?? []),
           ...transformers,
-        ],
+        ].concat(
+          opts.debug === true
+            ? [debug()]
+            : typeof opts.debug === "function"
+              ? [opts.debug]
+              : [],
+        ),
         ...rest,
       };
     };
