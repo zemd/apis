@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "@zemd/http-client",
+  "extends": "@zemd/tsconfig/tsconfig-base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "moduleDetection": "force",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "sourceMap": false,
+    "declarationMap": false,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

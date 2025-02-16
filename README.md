@@ -6,11 +6,12 @@ This repository contains a collection of libs that help to work with different A
 
 ### Available Packages
 
-| Package                                       | Registry                                                                                                                                            | Description                                        |
-| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [`@zemd/http-client`](./packages/http-client) | [![npm](https://img.shields.io/npm/v/@zemd/http-client?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/http-client)         | `fetch` utilities for building robust http clients |
-| [`@zemd/figma-rest-api`](./apis/figma)        | [![npm](https://img.shields.io/npm/v/@zemd/figma-rest-api?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/figma-rest-api)   | A client for working with Figma REST API           |
-| [`@zemd/flickr-rest-api`](./apis/flickr)      | [![npm](https://img.shields.io/npm/v/@zemd/flickr-rest-api?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/flickr-rest-api) | A client for working with Flickr REST API          |
+| Package                                       | Registry                                                                                                                                            | Description                                                  |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [`@zemd/http-client`](./packages/http-client) | [![npm](https://img.shields.io/npm/v/@zemd/http-client?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/http-client)         | `fetch` utilities for building robust http clients           |
+| [`@zemd/figma-rest-api`](./apis/figma)        | [![npm](https://img.shields.io/npm/v/@zemd/figma-rest-api?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/figma-rest-api)   | A client for working with Figma REST API                     |
+| [`@zemd/flickr-rest-api`](./apis/flickr)      | [![npm](https://img.shields.io/npm/v/@zemd/flickr-rest-api?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/flickr-rest-api) | A client for working with Flickr REST API                    |
+| [`@zemd/openapi`](./packages/openapi)         | [![npm](https://img.shields.io/npm/v/@zemd/openapi?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/openapi)                 | OpenAPI typescript definitions and tools (⚠️ in development) |
 
 ## License
 
