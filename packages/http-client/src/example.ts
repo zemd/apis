@@ -26,7 +26,9 @@ const tokenEndpoint = (payload: {
   return {
     url: "/token",
     transformers: [method("POST"), body(JSON.stringify(payload))],
-    responseParser: (json: any): Token => json,
+    responseParser: (json: any): Token => {
+      return json;
+    },
   };
 };
 
@@ -53,16 +55,15 @@ const createOAuth2Client = (opts: {
   };
 };
 
-const bearerToken = (
-  oauthClient: ReturnType<typeof createOAuth2Client>,
-): TFetchTransformer => {
+const bearerToken = (oauthClient: ReturnType<typeof createOAuth2Client>): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...args: TFetchFnParams) => {
     const [input, init] = args;
     const token = await oauthClient.token();
     return fetchFn(input, {
       ...init,
       headers: {
-        ...init?.headers,
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread
+        ...(Array.isArray(init?.headers) ? Object.fromEntries(init.headers) : init?.headers),
         Authorization: `Bearer ${token.access_token}`,
       },
     });
@@ -76,10 +77,7 @@ function apiAction(param: number) {
   };
 }
 
-const createApiSdk = (
-  oauthClient: ReturnType<typeof createOAuth2Client>,
-  opts: { debug?: boolean } = {},
-) => {
+const createApiSdk = (oauthClient: ReturnType<typeof createOAuth2Client>, opts: { debug?: boolean } = {}) => {
   const build = createBuildEndpointFn({
     baseUrl: "https://api.example.com",
     transformers: [bearerToken(oauthClient)],

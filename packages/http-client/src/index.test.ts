@@ -18,8 +18,11 @@ describe("HTTP Client", () => {
   let mockFetch: Mock<typeof fetch>;
 
   beforeEach(() => {
-    mockFetch = vi.fn(() => Promise.resolve(new Response()));
-    global.fetch = mockFetch;
+    // eslint-disable-next-line @typescript-eslint/require-await
+    mockFetch = vi.fn(async (): Promise<Response> => {
+      return new Response();
+    });
+    globalThis.fetch = mockFetch;
   });
 
   describe("compose", () => {
@@ -72,10 +75,7 @@ describe("HTTP Client", () => {
       const withPrefix = compose([prefix("https://example.com/api")]);
       await withPrefix("/users");
 
-      expect(mockFetch).toHaveBeenCalledWith(
-        "https://example.com/api/users",
-        undefined,
-      );
+      expect(mockFetch).toHaveBeenCalledWith("https://example.com/api/users", undefined);
     });
   });
 
@@ -84,10 +84,7 @@ describe("HTTP Client", () => {
       const withQuery = compose([query({ page: "1", limit: "10" })]);
       await withQuery("https://api.example.com/users");
 
-      expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.example.com/users?page=1&limit=10",
-        undefined,
-      );
+      expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/users?page=1&limit=10", undefined);
     });
   });
 
@@ -114,9 +111,7 @@ describe("HTTP Client", () => {
 
   describe("retry", () => {
     it("should retry on failure", async () => {
-      mockFetch
-        .mockRejectedValueOnce(new Error("Network error"))
-        .mockResolvedValueOnce(new Response());
+      mockFetch.mockRejectedValueOnce(new Error("Network error")).mockResolvedValueOnce(new Response());
 
       const withRetry = compose([retry(2, 100)]);
       await withRetry("https://api.example.com");
@@ -127,9 +122,7 @@ describe("HTTP Client", () => {
 
   describe("cache", () => {
     it("should cache GET requests", async () => {
-      mockFetch.mockResolvedValue(
-        new Response(JSON.stringify({ data: "test" })),
-      );
+      mockFetch.mockResolvedValue(new Response(JSON.stringify({ data: "test" })));
 
       const withCache = compose([method("GET"), cache(1000)]);
       await withCache("https://api.example.com");
@@ -141,17 +134,16 @@ describe("HTTP Client", () => {
 
   describe("endpoint", () => {
     it("should create an endpoint function", async () => {
-      const getUser = endpoint(() => ({
-        url: "https://api.example.com/users/1",
-        transformers: [method("GET")],
-      }));
+      const getUser = endpoint(() => {
+        return {
+          url: "https://api.example.com/users/1",
+          transformers: [method("GET")],
+        };
+      });
 
       await getUser();
 
-      expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.example.com/users/1",
-        { method: "GET" },
-      );
+      expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/users/1", { method: "GET" });
     });
   });
 
@@ -160,20 +152,19 @@ describe("HTTP Client", () => {
       const build = createBuildEndpointFn({
         baseUrl: "https://api.example.com",
       });
-      const getUser = build((param: number) => ({
-        url: `/users/${param}`,
-        transformers: [method("GET")],
-      }));
+      const getUser = build((param: number) => {
+        return {
+          url: `/users/${param}`,
+          transformers: [method("GET")],
+        };
+      });
 
       await getUser(1);
 
-      expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.example.com/users/1",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/users/1", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
     });
   });
 });

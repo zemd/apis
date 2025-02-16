@@ -1,9 +1,6 @@
 export type TFetchFn = typeof fetch;
 export type TFetchFnParams = Parameters<TFetchFn>;
-export type TFetchTransformer = (
-  fetchFn: TFetchFn,
-  ...params: TFetchFnParams
-) => ReturnType<TFetchFn>;
+export type TFetchTransformer = (fetchFn: TFetchFn, ...params: TFetchFnParams) => ReturnType<TFetchFn>;
 
 /**
   * Composes a list of transformers into a single fetch function.
@@ -19,12 +16,9 @@ export type TFetchTransformer = (
   * @param fetchFn The base fetch function to be transformed (defaults to global fetch)
   * @returns A new fetch function that applies all the transformers in order
   */
-export const compose = (
-  transformers: Array<TFetchTransformer>,
-  fetchFn: TFetchFn = fetch,
-): TFetchFn => {
+export const compose = (transformers: Array<TFetchTransformer>, fetchFn: TFetchFn = fetch): TFetchFn => {
   return transformers.reduceRight<TFetchFn>((acc, transformer) => {
-    const res: TFetchFn = (...params: TFetchFnParams) => {
+    const res: TFetchFn = async (...params: TFetchFnParams) => {
       return transformer(acc, ...params);
     };
     return res;
@@ -37,12 +31,19 @@ export const compose = (
  * @returns A transformer function that sets the specified HTTP method
  */
 export const method = (name: string): TFetchTransformer => {
-  return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
     return fetchFn(input, {
       ...init,
       method: name,
     });
+  };
+};
+
+const spreadHeaders = (headers: HeadersInit | undefined): Record<string, any> => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/no-misused-spread
+    ...(Array.isArray(headers) ? Object.fromEntries(headers) : headers),
   };
 };
 
@@ -53,12 +54,12 @@ export const method = (name: string): TFetchTransformer => {
  * @returns A transformer function that adds the specified header
  */
 export const header = (key: string, value: string): TFetchTransformer => {
-  return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
     return fetchFn(input, {
       ...init,
       headers: {
-        ...init?.headers,
+        ...spreadHeaders(init?.headers),
         [key]: value,
       },
     });
@@ -70,27 +71,25 @@ export const header = (key: string, value: string): TFetchTransformer => {
  * @returns A transformer function that adds the JSON Content-Type header
  */
 export const json = (): TFetchTransformer => {
-  return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
     return fetchFn(input, {
       ...init,
       headers: {
-        ...init?.headers,
+        ...spreadHeaders(init?.headers),
         "Content-Type": "application/json",
       },
     });
   };
 };
 
-const modifyUrlPath = (
-  input: TFetchFnParams[0],
-  prefix: string,
-): TFetchFnParams[0] => {
+const modifyUrlPath = (input: TFetchFnParams[0], prefix: string): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
     urlObj.pathname = `${prefix}${urlObj.pathname}`;
 
     return new Request(urlObj.toString(), {
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...input,
     });
   }
@@ -111,14 +110,12 @@ const modifyUrlPath = (
   return `${prefix}${input}`;
 };
 
-const modifyUrlQuery = (
-  input: TFetchFnParams[0],
-  query: object,
-): TFetchFnParams[0] => {
+const modifyUrlQuery = (input: TFetchFnParams[0], query: object): TFetchFnParams[0] => {
   if (input instanceof Request) {
     const urlObj = new URL(input.url);
     urlObj.search = `${new URLSearchParams([...Array.from(urlObj.searchParams.entries()), ...Object.entries(query)])}`;
     return new Request(urlObj.toString(), {
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...input,
     });
   }
@@ -137,7 +134,7 @@ const modifyUrlQuery = (
   }
 
   const [pathname, search] = input.split("?");
-  return `${pathname}?${new URLSearchParams([...new URLSearchParams(search).entries(), ...Object.entries(query)])}`;
+  return `${pathname ?? ""}?${new URLSearchParams([...new URLSearchParams(search).entries(), ...Object.entries(query)])}`;
 };
 
 /**
@@ -146,7 +143,7 @@ const modifyUrlQuery = (
  * @returns A transformer function that adds the specified prefix
  */
 export const prefix = (value: string): TFetchTransformer => {
-  return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
 
     return fetchFn(modifyUrlPath(input, value), init);
@@ -159,7 +156,7 @@ export const prefix = (value: string): TFetchTransformer => {
  * @returns A transformer function that adds the specified query parameters to the URL
  */
 export const query = (obj: object): TFetchTransformer => {
-  return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
     return fetchFn(modifyUrlQuery(input, obj), init);
   };
@@ -171,7 +168,7 @@ export const query = (obj: object): TFetchTransformer => {
  * @returns A transformer function that sets the specified body
  */
 export const body = (obj: BodyInit): TFetchTransformer => {
-  return (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
+  return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
     return fetchFn(input, {
       ...init,
@@ -180,14 +177,16 @@ export const body = (obj: BodyInit): TFetchTransformer => {
   };
 };
 
+const consoleDebug = (p: any) => {
+  console.debug(JSON.stringify(p, null, 4));
+};
+
 /**
  * Creates a transformer that logs request parameters for debugging purposes.
  * @param fn Optional custom logging function (defaults to console.debug with JSON.stringify)
  * @returns A transformer function that logs the request parameters before passing them to the next transformer
  */
-export const debug = (
-  fn: Function = (p: any) => console.debug(JSON.stringify(p, null, 4)),
-): TFetchTransformer => {
+export const debug = (fn: Function = consoleDebug): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     fn(params);
     return fetchFn(...params);
@@ -200,10 +199,7 @@ export const debug = (
  * @param delay The delay between retries in milliseconds (default: 1000)
  * @returns A transformer function that retries the request on failure
  */
-export const retry = (
-  maxRetries: number = 3,
-  delay: number = 1000,
-): TFetchTransformer => {
+export const retry = (maxRetries: number = 3, delay: number = 1000): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     let lastError;
     for (let i = 0; i < maxRetries; i += 1) {
@@ -211,7 +207,9 @@ export const retry = (
         return await fetchFn(...params);
       } catch (error) {
         lastError = error;
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await new Promise((resolve) => {
+          setTimeout(resolve, delay);
+        });
       }
     }
     throw lastError;
@@ -237,7 +235,7 @@ const getCacheKey = (input: string | URL | Request): string => {
  * @param maxAge The maximum age of the cache in milliseconds (default: 60000 ms or 1 minute)
  * @returns A transformer function that caches GET requests and returns cached responses if available
  */
-export const cache = (maxAge: number = 60000): TFetchTransformer => {
+export const cache = (maxAge: number = 60_000): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     const [input, init] = params;
     if (init?.method?.toUpperCase() !== "GET") {
@@ -248,9 +246,7 @@ export const cache = (maxAge: number = 60000): TFetchTransformer => {
     const cached = cacheStore.get(cacheKey);
 
     if (cached && Date.now() - cached.timestamp < maxAge) {
-      return Promise.resolve(
-        new Response(JSON.stringify(cached.data), { status: 200 }),
-      );
+      return new Response(JSON.stringify(cached.data), { status: 200 });
     }
 
     const response = await fetchFn(...params);
@@ -273,14 +269,11 @@ export type TEndpointDeclarationSpec = {
  * Represents a function that declares an endpoint.
  * This function takes any number of parameters and returns a TEndpointDeclarationSpec.
  */
-export type TEndpointDeclarationFn = (
-  ...params: Array<any>
-) => TEndpointDeclarationSpec;
+export type TEndpointDeclarationFn = (...params: Array<any>) => TEndpointDeclarationSpec;
 
-export type TEndpointReturnFn<
-  ArgEndpointDeclarationFnParams extends Array<any>,
-  ArgResult = Response,
-> = (...params: ArgEndpointDeclarationFnParams) => Promise<ArgResult>;
+export type TEndpointReturnFn<ArgEndpointDeclarationFnParams extends Array<any>, ArgResult = Response> = (
+  ...params: ArgEndpointDeclarationFnParams
+) => Promise<ArgResult>;
 
 /**
  * Creates an endpoint function based on the provided declaration function.
@@ -295,9 +288,7 @@ export const endpoint = <
   ArgDecFn extends TEndpointDeclarationFn,
   ArgParams extends Parameters<ArgDecFn>,
   ReturnSpec extends ReturnType<ArgDecFn>,
-  ArgResult = ReturnSpec["responseParser"] extends (data: any) => infer R
-    ? R
-    : Response,
+  ArgResult = ReturnSpec["responseParser"] extends (data: any) => infer R ? R : Response,
 >(
   fn: ArgDecFn,
   parseResponse: "json" | "text" = "json",
@@ -333,30 +324,17 @@ type TCreateBuildOptions = {
  *
  * @returns A function that takes an endpoint declaration function and returns a configured endpoint
  */
-export const createBuildEndpointFn = ({
-  baseUrl,
-  ...opts
-}: TCreateBuildOptions) => {
+export const createBuildEndpointFn = ({ baseUrl, ...opts }: TCreateBuildOptions) => {
   return <ArgDecFn extends TEndpointDeclarationFn>(fn: ArgDecFn) => {
-    const commonTransformers: Array<TFetchTransformer> = [
-      prefix(baseUrl),
-      json(),
-    ];
+    const commonTransformers: Array<TFetchTransformer> = [prefix(baseUrl), json()];
 
     const endpointDecFn = (...params: Parameters<ArgDecFn>) => {
       const { url, transformers, ...rest } = fn(...params);
+      const debugFn = typeof opts.debug === "function" ? [opts.debug] : [];
       return {
         url,
-        transformers: [
-          ...commonTransformers,
-          ...(opts.transformers ?? []),
-          ...transformers,
-        ].concat(
-          opts.debug === true
-            ? [debug()]
-            : typeof opts.debug === "function"
-              ? [opts.debug]
-              : [],
+        transformers: [...commonTransformers, ...(opts.transformers ?? []), ...transformers].concat(
+          opts.debug === true ? [debug()] : debugFn,
         ),
         ...rest,
       };
