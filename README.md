@@ -6,7 +6,7 @@ This repository contains a collection of libs that help to work with different A
 
 ### Available Packages
 
-| Package                                       | Registry                                                                                                                                            | Description                                                  |
+| Package                                       | Version                                                                                                                                             | Description                                                  |
 | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
 | [`@zemd/http-client`](./packages/http-client) | [![npm](https://img.shields.io/npm/v/@zemd/http-client?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/http-client)         | `fetch` utilities for building robust http clients           |
 | [`@zemd/figma-rest-api`](./apis/figma)        | [![npm](https://img.shields.io/npm/v/@zemd/figma-rest-api?color=0000ff&label=npm&labelColor=000)](https://npmjs.com/package/@zemd/figma-rest-api)   | A client for working with Figma REST API                     |
