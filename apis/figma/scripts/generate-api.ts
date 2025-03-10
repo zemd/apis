@@ -31,8 +31,9 @@ async function generateApi(data: Schema) {
   });
 
   sourceFile.addImportDeclaration({
-    moduleSpecifier: "./utils",
-    namedImports: ["figmaToken"],
+    moduleSpecifier: "@zemd/http-client",
+    namedImports: ["TFetchTransformer"],
+    isTypeOnly: true,
   });
 
   const versionSet = new Set<string>();
@@ -126,10 +127,10 @@ async function generateApi(data: Schema) {
       {
         name: "figma",
         initializer: (writer) => {
-          writer.write(`(accessToken: string) => {`).indent();
+          writer.write(`(initialTransformers: TFetchTransformer[]) => {`).indent();
 
           writer
-            .write(`const endpoint = createEndpoint([prefix("${apiServerUrl}"), json(), figmaToken(accessToken)]);`)
+            .write(`const endpoint = createEndpoint([prefix("${apiServerUrl}"), json(), ...initialTransformers]);`)
             .newLine();
 
           writer.write(`return (`);

@@ -1,4 +1,5 @@
 import { createEndpoint, query, body, method, prefix, json } from "@zemd/http-client";
+import type { TFetchTransformer } from "@zemd/http-client";
 import { figmaToken } from "./utils";
 import type {
   GetFileResponse,
@@ -112,8 +113,8 @@ import type {
   GetLibraryAnalyticsVariableUsagesQueryParams,
 } from "@figma/rest-api-spec";
 
-export const figma = (accessToken: string) => {
-  const endpoint = createEndpoint([prefix("https://api.figma.com"), json(), figmaToken(accessToken)]);
+export const figma = (initialTransformers: TFetchTransformer[]) => {
+  const endpoint = createEndpoint([prefix("https://api.figma.com"), json(), ...initialTransformers]);
   return {
     v1: {
       files: {

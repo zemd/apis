@@ -5,18 +5,17 @@ This is a Figma API implementation for javascript projects.
 ## Installation
 
 ```sh
-bun add @zemd/figma-rest-api
 npm install @zemd/figma-rest-api
-yarn add @zemd/figma-rest-api
 pnpm add @zemd/figma-rest-api
 ```
 
 ## Usage
 
 ```ts
-import { figma } from "@zemd/figma-rest-api";
+import { figma, figmaToken } from "@zemd/figma-rest-api";
 
-const client = figma("your-figma-token");
+const client = figma([figmaToken("your-figma-token")]);
+// alternatively you can use figma([header("Authorization", "Bearer <BASE64_ENCODED_CLIENT_ID_AND_SECRET>")]);
 const response = await client.files.getFile("filekey");
 console.log(await response.json());
 ```
