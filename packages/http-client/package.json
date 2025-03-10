@@ -9,7 +9,7 @@
     "email": "dmytro.zelenetskyi@gmail.com",
     "url": "https://codeandgin.co"
   },
-  "homepage": "https://github.com/zemd/apis/packages/http-client",
+  "homepage": "https://github.com/zemd/apis/tree/main/packages/http-client",
   "repository": {
     "type": "git",
     "url": "https://github.com/zemd/apis.git"
