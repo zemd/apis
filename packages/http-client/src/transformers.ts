@@ -30,9 +30,14 @@ export const header = (key: string, value: string): TFetchTransformer => {
     const [urlOrRequest, requestInit] = params;
 
     const headers = new Headers(requestInit?.headers);
-    headers.set(key, value);
+    headers.append(key, value);
 
-    return fetchFn(urlOrRequest, Object.assign(requestInit ?? {}, { headers }));
+    return fetchFn(
+      urlOrRequest,
+      Object.assign(requestInit ?? {}, {
+        headers: Object.fromEntries(headers.entries()),
+      }),
+    );
   };
 };
 
@@ -55,9 +60,20 @@ const modifyUrlPath = (input: TFetchFnParams[0], prefix: string): TFetchFnParams
     });
   }
 
-  const urlObj = new URL(input.toString());
-  urlObj.pathname = `${prefix}${urlObj.pathname}`;
-  return urlObj;
+  if (input instanceof URL) {
+    const urlObj = new URL(input.toString());
+    urlObj.pathname = `${prefix}${urlObj.pathname}`;
+    return urlObj;
+  }
+
+  // typeof input === 'string'
+  if (URL.canParse(input)) {
+    const urlObj = new URL(input);
+    urlObj.pathname = `${prefix}${urlObj.pathname}`;
+    return urlObj.toString();
+  }
+
+  return `${prefix}${input}`;
 };
 
 const modifyUrlQuery = (input: TFetchFnParams[0], query: object): TFetchFnParams[0] => {
@@ -135,7 +151,11 @@ export const body = (obj: BodyInit): TFetchTransformer => {
  * @param delay The delay between retries in milliseconds (default: 1000)
  * @returns A transformer function that retries the request on failure
  */
-export const retry = (maxRetries: number = 3, delay: number = 1000): TFetchTransformer => {
+export const retry = (
+  maxRetries: number = 3,
+  delay: number = 1000,
+  backoffFactor: number | ((attempt: number) => number) = 1,
+): TFetchTransformer => {
   return async (fetchFn: TFetchFn, ...params: TFetchFnParams) => {
     let lastError;
     for (let i = 0; i < maxRetries; i += 1) {
@@ -143,8 +163,10 @@ export const retry = (maxRetries: number = 3, delay: number = 1000): TFetchTrans
         return await fetchFn(...params);
       } catch (error) {
         lastError = error;
+        // Calculate exponential backoff: delay * (2^attempt)
+        const backoffDelay = delay * (typeof backoffFactor === "number" ? backoffFactor : backoffFactor(i));
         await new Promise((resolve) => {
-          setTimeout(resolve, delay);
+          setTimeout(resolve, backoffDelay);
         });
       }
     }
