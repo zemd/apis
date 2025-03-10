@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.2
+
+### Patch Changes
+
+- 1e2fc45: accept initial transformers for api client factory
+
 ## 3.0.1
 
 ### Patch Changes
