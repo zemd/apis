@@ -29,12 +29,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsup src/index.ts --minify --dts --format esm",
     "dev": "tsc --watch",
     "test": "vitest --run"
   },
   "devDependencies": {
     "@zemd/tsconfig": "catalog:",
+    "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

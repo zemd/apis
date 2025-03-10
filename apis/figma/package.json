@@ -29,7 +29,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && cp ./src/openapi.json ./dist/openapi.json",
+    "build": "tsup src/index.ts --minify --dts --format esm && cp ./src/openapi.json ./dist/openapi.json",
     "dev": "tsc --watch",
     "generate-api": "bun ./scripts/generate-api.ts"
   },
@@ -40,6 +40,7 @@
     "@zemd/tsconfig": "catalog:",
     "change-case": "^5.4.4",
     "ts-morph": "^25.0.1",
+    "tsup": "catalog:",
     "typescript": "catalog:",
     "yaml": "^2.7.0"
   },
