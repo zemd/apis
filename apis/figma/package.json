@@ -29,7 +29,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp ./src/openapi.json ./dist/openapi.json",
     "dev": "tsc --watch",
     "generate-api": "bun ./scripts/generate-api.ts"
   },
