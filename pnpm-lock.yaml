@@ -9,6 +9,9 @@ catalogs:
     "@zemd/tsconfig":
       specifier: ^1.4.0
       version: 1.4.0
+    tsup:
+      specifier: ^8.4.0
+      version: 8.4.0
     typescript:
       specifier: ^5.8.2
       version: 5.8.2
@@ -69,7 +72,7 @@ importers:
         specifier: ^25.0.1
         version: 25.0.1
       tsup:
-        specifier: ^8.4.0
+        specifier: "catalog:"
         version: 8.4.0(postcss@8.5.2)(typescript@5.8.2)(yaml@2.7.0)
       typescript:
         specifier: "catalog:"
@@ -100,7 +103,7 @@ importers:
         specifier: "catalog:"
         version: 1.4.0
       tsup:
-        specifier: ^8.4.0
+        specifier: "catalog:"
         version: 8.4.0(postcss@8.5.2)(typescript@5.8.2)(yaml@2.7.0)
       typescript:
         specifier: "catalog:"
