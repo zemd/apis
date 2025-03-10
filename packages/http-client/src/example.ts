@@ -1,7 +1,8 @@
 import {
   body,
-  createBuildEndpointFn,
+  createEndpoint,
   method,
+  prefix,
   type TFetchFn,
   type TFetchFnParams,
   type TFetchTransformer,
@@ -17,32 +18,21 @@ const isExpired = (token: Token): boolean => {
   return token.expires_at - Date.now() < 0;
 };
 
-const tokenEndpoint = (payload: {
-  client_id: string;
-  client_secret: string;
-  audience: string;
-  //...
-}) => {
-  return {
-    url: "/token",
-    transformers: [method("POST"), body(JSON.stringify(payload))],
-    responseParser: (json: any): Token => {
-      return json;
-    },
-  };
-};
-
 const createOAuth2Client = (opts: {
   debug?: boolean;
   credentials: { client_id: string; client_secret: string; audience: string };
 }) => {
-  const build = createBuildEndpointFn({
-    baseUrl: "https://auth.example.com/oauth",
-    debug: !!opts.debug,
-  });
+  const endpoint = createEndpoint([prefix("https://auth.example.com/oauth")]);
 
   let cachedToken: Token | null = null;
-  const fetchToken = build(tokenEndpoint);
+  const fetchToken = async (payload: {
+    client_id: string;
+    client_secret: string;
+    audience: string;
+    //...
+  }) => {
+    return endpoint<Token>("/token", [method("POST"), body(JSON.stringify(payload))]);
+  };
 
   return {
     token: async (skipCache: boolean = false): Promise<Token> => {
@@ -59,32 +49,26 @@ const bearerToken = (oauthClient: ReturnType<typeof createOAuth2Client>): TFetch
   return async (fetchFn: TFetchFn, ...args: TFetchFnParams) => {
     const [input, init] = args;
     const token = await oauthClient.token();
+
+    const headers = new Headers(init?.headers);
+    headers.set("Authorization", `Bearer ${token.access_token}`);
+
     return fetchFn(input, {
       ...init,
-      headers: {
-        // eslint-disable-next-line @typescript-eslint/no-misused-spread
-        ...(Array.isArray(init?.headers) ? Object.fromEntries(init.headers) : init?.headers),
-        Authorization: `Bearer ${token.access_token}`,
-      },
+      headers,
     });
   };
 };
 
-function apiAction(param: number) {
+type ActionResponse = {
+  hello: string;
+};
+const createApiSdk = (oauthClient: ReturnType<typeof createOAuth2Client>) => {
+  const endpoint = createEndpoint([prefix("https://api.example.com"), bearerToken(oauthClient)]);
   return {
-    url: `/some/path/${param}`,
-    transformers: [method("GET")],
-  };
-}
-
-const createApiSdk = (oauthClient: ReturnType<typeof createOAuth2Client>, opts: { debug?: boolean } = {}) => {
-  const build = createBuildEndpointFn({
-    baseUrl: "https://api.example.com",
-    transformers: [bearerToken(oauthClient)],
-    debug: !!opts.debug,
-  });
-  return {
-    someAction: build(apiAction),
+    someAction: async (param: number) => {
+      return endpoint<ActionResponse>(`/some/path/${param}`, [method("GET")]);
+    },
   };
 };
 
@@ -95,8 +79,7 @@ const oauth = createOAuth2Client({
     client_secret: "asdasdasd",
   },
 });
-const sdk = createApiSdk(oauth, {});
+const sdk = createApiSdk(oauth);
 
 const result = await sdk.someAction(123);
-const json = await result.json();
-console.log(json);
+console.log(result);

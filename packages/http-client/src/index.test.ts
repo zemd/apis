@@ -1,24 +1,10 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import {
-  compose,
-  method,
-  header,
-  json,
-  prefix,
-  query,
-  body,
-  debug,
-  retry,
-  cache,
-  endpoint,
-  createBuildEndpointFn,
-} from "./index.js";
+import { compose, method, header, json, prefix, query, body, debug, retry, cache, createEndpoint } from "./index.js";
 
 describe("HTTP Client", () => {
   let mockFetch: Mock<typeof fetch>;
 
   beforeEach(() => {
-    // eslint-disable-next-line @typescript-eslint/require-await
     mockFetch = vi.fn(async (): Promise<Response> => {
       return new Response();
     });
@@ -132,32 +118,12 @@ describe("HTTP Client", () => {
     });
   });
 
-  describe("endpoint", () => {
-    it("should create an endpoint function", async () => {
-      const getUser = endpoint(() => {
-        return {
-          url: "https://api.example.com/users/1",
-          transformers: [method("GET")],
-        };
-      });
-
-      await getUser();
-
-      expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/users/1", { method: "GET" });
-    });
-  });
-
-  describe("createBuildEndpointFn", () => {
+  describe("createEndpoint", () => {
     it("should create a build function with common transformers", async () => {
-      const build = createBuildEndpointFn({
-        baseUrl: "https://api.example.com",
-      });
-      const getUser = build((param: number) => {
-        return {
-          url: `/users/${param}`,
-          transformers: [method("GET")],
-        };
-      });
+      const endpoint = createEndpoint([prefix("https://api.example.com")]);
+      const getUser = async (param: number) => {
+        return endpoint(`/users/${param}`, [method("GET")]);
+      };
 
       await getUser(1);
 
