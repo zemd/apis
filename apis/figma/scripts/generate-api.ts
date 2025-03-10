@@ -137,7 +137,7 @@ async function generateApi(data: Schema) {
             for (const version of versionSet) {
               writer.write(`${version}: `).indent();
               writer.block(() => {
-                const versionNamespaces = namespaceMap.get(version) ?? [];
+                const versionNamespaces = namespaceMap.get(version) ?? new Set();
                 for (const namespace of versionNamespaces) {
                   writer.write(`${namespace}: {`).indent();
                   const operationsFiltered = operations.filter((op) => {
