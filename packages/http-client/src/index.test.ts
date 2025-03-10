@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { compose, method, header, json, prefix, query, body, debug, retry, cache, createEndpoint } from "./index.js";
+import { compose, method, header, json, prefix, query, body, debug, retry, cache, createEndpoint } from "./";
 
 describe("HTTP Client", () => {
   let mockFetch: Mock<typeof fetch>;

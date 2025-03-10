@@ -1,4 +1,4 @@
-import type { TFetchFn, TFetchFnParams, TFetchTransformer } from "./type.js";
+import type { TFetchFn, TFetchFnParams, TFetchTransformer } from "./type";
 
 /**
   * Composes a list of transformers into a single fetch function.

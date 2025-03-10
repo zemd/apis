@@ -1,4 +1,4 @@
-import type { TFetchFn, TFetchFnParams, TFetchTransformer } from "./type.js";
+import type { TFetchFn, TFetchFnParams, TFetchTransformer } from "./type";
 
 const transform = async (fetchFn: TFetchFn, params: TFetchFnParams, input: RequestInit): Promise<Response> => {
   const [urlOrRequest, requestInit] = params;

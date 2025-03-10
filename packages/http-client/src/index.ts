@@ -1,4 +1,4 @@
-export type * from "./type.js";
-export * from "./compose.js";
-export * from "./transformers.js";
-export * from "./endpoint.js";
+export type * from "./type";
+export * from "./compose";
+export * from "./transformers";
+export * from "./endpoint";

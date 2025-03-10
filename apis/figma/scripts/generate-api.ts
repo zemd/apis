@@ -31,7 +31,7 @@ async function generateApi(data: Schema) {
   });
 
   sourceFile.addImportDeclaration({
-    moduleSpecifier: "./utils.js",
+    moduleSpecifier: "./utils",
     namedImports: ["figmaToken"],
   });
 

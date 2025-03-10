@@ -1,12 +1,4 @@
-import {
-  body,
-  createEndpoint,
-  method,
-  prefix,
-  type TFetchFn,
-  type TFetchFnParams,
-  type TFetchTransformer,
-} from "./index.js";
+import { body, createEndpoint, method, prefix, type TFetchFn, type TFetchFnParams, type TFetchTransformer } from "./";
 
 type Token = {
   access_token: string;

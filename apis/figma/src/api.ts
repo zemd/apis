@@ -1,5 +1,5 @@
 import { createEndpoint, query, body, method, prefix, json } from "@zemd/http-client";
-import { figmaToken } from "./utils.js";
+import { figmaToken } from "./utils";
 import type {
   GetFileResponse,
   GetFilePathParams,
