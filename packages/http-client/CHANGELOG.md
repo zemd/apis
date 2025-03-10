@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.0
+
+### Major Changes
+
+- 0fd0294: Simplified new http-client, generate figma from openapi spec
+
 ## 3.0.1
 
 ### Patch Changes
