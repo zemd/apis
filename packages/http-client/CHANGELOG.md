@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.1
+
+### Patch Changes
+
+- 00526be: fix build script
+
 ## 4.0.0
 
 ### Major Changes
