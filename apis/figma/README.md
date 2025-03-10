@@ -12,10 +12,10 @@ pnpm add @zemd/figma-rest-api
 ## Usage
 
 ```ts
-import { figma, figmaToken } from "@zemd/figma-rest-api";
+import { figma, figmaToken, header } from "@zemd/figma-rest-api";
 
 const client = figma([figmaToken("your-figma-token")]);
-// alternatively you can use figma([header("Authorization", "Bearer <BASE64_ENCODED_CLIENT_ID_AND_SECRET>")]);
+// alternatively you can use figma([header("Authorization", "Bearer <TOKEN>")]);
 const response = await client.files.getFile("filekey");
 console.log(await response.json());
 ```
