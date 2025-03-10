@@ -5,13 +5,13 @@
   "compilerOptions": {
     "outDir": "dist",
     "moduleDetection": "force",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "target": "ES2022",
     "sourceMap": false,
     "declarationMap": false,
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

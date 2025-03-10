@@ -8,6 +8,9 @@ export default [
       "@typescript-eslint/explicit-module-boundary-types": ["off"],
       "sonarjs/function-return-type": ["off"],
       "@typescript-eslint/no-unsafe-function-type": ["off"],
+      "sonarjs/no-commented-code": ["off"],
+      "sonarjs/no-nested-functions": ["off"],
+      "sonarjs/cognitive-complexity": ["off"],
     },
   },
 ];

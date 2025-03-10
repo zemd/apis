@@ -29,15 +29,21 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "tsc && cp ./src/openapi.json ./dist/openapi.json",
+    "dev": "tsc --watch",
+    "generate-api": "bun ./scripts/generate-api.ts"
   },
   "devDependencies": {
+    "@figma/rest-api-spec": "^0.24.0",
+    "@types/node": "^22.13.10",
+    "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
-    "typescript": "catalog:"
+    "change-case": "^5.4.4",
+    "ts-morph": "^25.0.1",
+    "typescript": "catalog:",
+    "yaml": "^2.7.0"
   },
   "dependencies": {
-    "@zemd/http-client": "workspace:*",
-    "zod": "catalog:"
+    "@zemd/http-client": "workspace:*"
   }
 }

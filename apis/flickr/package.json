@@ -37,7 +37,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@zemd/http-client": "workspace:*",
+    "@zemd/http-client": "3.0.1",
     "zod": "catalog:"
   }
 }

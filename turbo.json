@@ -12,6 +12,10 @@
     },
     "test": {
       "dependsOn": ["^build"]
+    },
+    "generate-api": {
+      "dependsOn": ["^build"],
+      "outputs": ["src/api.ts"]
     }
   }
 }
