@@ -1,5 +1,13 @@
 # @zemd/flickr-rest-api
 
+## 1.0.1
+
+### Patch Changes
+
+- 0fd0294: freeze deps version
+- Updated dependencies [0fd0294]
+  - @zemd/http-client@4.0.0
+
 ## 1.0.0
 
 ### Major Changes

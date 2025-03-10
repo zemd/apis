@@ -1,5 +1,16 @@
 # @zemd/figma-rest-api
 
+## 3.0.0
+
+### Major Changes
+
+- 0fd0294: Simplified new http-client, generate figma from openapi spec
+
+### Patch Changes
+
+- Updated dependencies [0fd0294]
+  - @zemd/http-client@4.0.0
+
 ## 2.0.0
 
 ### Major Changes
