@@ -78,8 +78,8 @@ importers:
   apis/flickr:
     dependencies:
       "@zemd/http-client":
-        specifier: 3.0.1
-        version: 3.0.1
+        specifier: 3.0.0
+        version: 3.0.0
       zod:
         specifier: "catalog:"
         version: 3.24.2
@@ -767,9 +767,9 @@ packages:
     peerDependencies:
       eslint: ">=9.2.0"
 
-  "@zemd/http-client@3.0.1":
+  "@zemd/http-client@3.0.0":
     resolution:
-      { integrity: sha512-VdjLg2AHshWX/X6OgkVvhOqesZ64avhAQA1CfY45Cm2jlQwVSo3B57yVjFjMscWGuACzidiGrc7oXtELKVDcOA== }
+      { integrity: sha512-jgc3QCniuRrABW72qS+BtgtKS+ALbA6qni/me6BYRrKMcQa6na632wK5/Id3bNpPSb/YZoMCdtUNv5xdh5H8FQ== }
 
   "@zemd/tsconfig@1.4.0":
     resolution:
@@ -2996,7 +2996,7 @@ snapshots:
       - supports-color
       - typescript
 
-  "@zemd/http-client@3.0.1": {}
+  "@zemd/http-client@3.0.0": {}
 
   "@zemd/tsconfig@1.4.0": {}
 
