@@ -12,7 +12,7 @@
   "homepage": "https://github.com/zemd/apis/tree/main/apis/figma",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zemd/apis.git"
+    "url": "git+https://github.com/zemd/apis.git"
   },
   "bugs": {
     "url": "https://github.com/zemd/apis/issues"
@@ -21,7 +21,9 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json",
+    "./openapi.json": "./dist/openapi.json"
   },
   "module": "./dist/index.js",
   "types": "./dist/index.js",
@@ -31,7 +33,8 @@
   "scripts": {
     "build": "tsup src/index.ts --minify --dts --format esm && cp ./src/openapi.json ./dist/openapi.json",
     "dev": "tsc --watch",
-    "generate-api": "bun ./scripts/generate-api.ts"
+    "generate-api": "bun ./scripts/generate-api.ts",
+    "lint-publint": "publint"
   },
   "devDependencies": {
     "@figma/rest-api-spec": "^0.24.0",

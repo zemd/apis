@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "OpenAPI typescript definitions and tools",
   "license": "Apache-2.0",
+  "type": "module",
   "author": {
     "name": "Dmytro Zelenetskyi",
     "email": "dmytro.zelenetskyi@gmail.com",
@@ -11,7 +12,7 @@
   "homepage": "https://github.com/zemd/apis/packages/openapi",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zemd/apis.git"
+    "url": "git+https://github.com/zemd/apis.git"
   },
   "bugs": {
     "url": "https://github.com/zemd/apis/issues"
@@ -29,7 +30,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "lint-publint": "publint"
   },
   "publishConfig": {
     "provenance": true

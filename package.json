@@ -2,6 +2,7 @@
   "name": "apis",
   "private": true,
   "scripts": {
+    "prebuild": "turbo telemetry disable",
     "build": "turbo build",
     "dev": "turbo dev",
     "generate": "turbo generate-api",
@@ -10,15 +11,17 @@
     "release": "pnpm run build && changeset publish",
     "changeset": "changeset",
     "test": "turbo test",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint-publint": "pnpm --filter \"./packages/*\" --filter \"./apis/*\" --no-bail run lint-publint"
   },
   "devDependencies": {
-    "eslint": "^9.22.0",
     "@changesets/cli": "^2.28.1",
     "@zemd/eslint-ts": "^1.0.9",
     "@zemd/tsconfig": "^1.4.0",
+    "eslint": "^9.22.0",
     "husky": "^9.1.7",
     "prettier": "^3.5.3",
+    "publint": "^0.3.9",
     "turbo": "^2.4.4"
   },
   "engines": {

@@ -12,7 +12,7 @@
   "homepage": "https://github.com/zemd/apis/tree/main/packages/http-client",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zemd/apis.git"
+    "url": "git+https://github.com/zemd/apis.git"
   },
   "bugs": {
     "url": "https://github.com/zemd/apis/issues"
@@ -21,7 +21,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "module": "./dist/index.js",
   "types": "./dist/index.js",
@@ -31,7 +32,8 @@
   "scripts": {
     "build": "tsup src/index.ts --minify --dts --format esm",
     "dev": "tsc --watch",
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "lint-publint": "publint"
   },
   "devDependencies": {
     "@zemd/tsconfig": "catalog:",
