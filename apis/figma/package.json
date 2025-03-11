@@ -4,6 +4,14 @@
   "version": "3.0.2",
   "license": "Apache-2.0",
   "description": "Figma API client.",
+  "keywords": [
+    "figma",
+    "api client",
+    "fetch",
+    "rest",
+    "api",
+    "typescript"
+  ],
   "author": {
     "name": "Dmytro Zelenetskyi",
     "email": "dmytro.zelenetskyi@gmail.com",

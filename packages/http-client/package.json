@@ -14,6 +14,13 @@
     "type": "git",
     "url": "git+https://github.com/zemd/apis.git"
   },
+  "keywords": [
+    "fetch",
+    "http client",
+    "http",
+    "compose",
+    "typescript"
+  ],
   "bugs": {
     "url": "https://github.com/zemd/apis/issues"
   },

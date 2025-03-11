@@ -17,6 +17,15 @@
   "bugs": {
     "url": "https://github.com/zemd/apis/issues"
   },
+  "keywords": [
+    "openapi",
+    "swagger",
+    "types",
+    "typescript",
+    "dts",
+    "codegen",
+    "schema"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
