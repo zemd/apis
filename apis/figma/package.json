@@ -1,12 +1,13 @@
 {
   "name": "@zemd/figma-rest-api",
   "type": "module",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "license": "Apache-2.0",
   "description": "Figma API client.",
   "keywords": [
     "figma",
     "api client",
+    "figma sdk",
     "fetch",
     "rest",
     "api",
@@ -45,8 +46,8 @@
     "lint-publint": "publint"
   },
   "devDependencies": {
-    "@figma/rest-api-spec": "^0.24.0",
-    "@types/node": "^22.13.10",
+    "@figma/rest-api-spec": "^0.25.0",
+    "@types/node": "^22.13.12",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
     "change-case": "^5.4.4",
