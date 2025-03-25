@@ -1,5 +1,5 @@
 import { parse } from "yaml";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import type { OperationObject, ParameterObject, PathItemObject, PathsObject, Schema } from "@zemd/openapi";
@@ -208,9 +208,9 @@ async function main() {
   const filePath = fileURLToPath(import.meta.resolve("@figma/rest-api-spec/openapi/openapi.yaml"));
   const openapi = await readFile(filePath, "utf8");
   const data = await parse(openapi);
-  // await writeFile(resolve(__dirname, "..", "dist", "openapi.json"), JSON.stringify(data, null, 2), "utf8");
 
   await generateApi(data);
+  await writeFile(resolve(__dirname, "..", "src", "openapi.json"), JSON.stringify(data, null, 2), "utf8");
 }
 
 main()
