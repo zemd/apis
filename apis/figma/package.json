@@ -3,7 +3,7 @@
   "type": "module",
   "version": "3.0.4",
   "license": "Apache-2.0",
-  "description": "Figma API client.",
+  "description": "A lightweight fetch-based and type-safe Figma Rest API client.",
   "keywords": [
     "figma",
     "api client",

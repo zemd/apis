@@ -1,6 +1,6 @@
 # Figma REST API client
 
-The lightweight (4kB only not compressed) fetch-based and type-safe Figma Rest API client.
+A lightweight (4kB only not compressed) fetch-based and type-safe Figma Rest API client.
 
 The package also re-distributes Figma OpenAPI declaration file in JSON format, since original `@figma/rest-api-spec` provides it only in YAML, which requires adding additional dependency.
 
