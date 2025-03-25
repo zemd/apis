@@ -1,6 +1,10 @@
-# @zemd/figma-rest-api
+# Figma REST API client
 
-This is a Figma API implementation for javascript projects.
+The lightweight (4kB only not compressed) fetch-based and type-safe Figma Rest API client.
+
+The package also re-distributes Figma OpenAPI declaration file in JSON format, since original `@figma/rest-api-spec` provides it only in YAML, which requires adding additional dependency.
+
+The client is built using `@zemd/http-client` library, which is very simple `fetch` configurator.
 
 ## Installation
 
@@ -17,14 +21,8 @@ import { figma, figmaToken, header } from "@zemd/figma-rest-api";
 const client = figma([figmaToken("your-figma-token")]);
 // alternatively you can use figma([header("Authorization", "Bearer <TOKEN>")]);
 const response = await client.v1.files.getFile("filekey");
-console.log(await response.json());
+console.log(response);
 ```
-
-## Advanced usage
-
-There might be cases when the library was not updated to the latest version of the Figma API, or you want to use some experimental features. In this case, you can construct your own api call using the essentials of the library.
-
-Since the library is built on top of `@zemd/http-client` you can compose different configurations together.
 
 ## License
 
@@ -32,5 +30,4 @@ Since the library is built on top of `@zemd/http-client` you can compose differe
 
 ## Donate
 
-[![](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/red_rabbit)
 [![](https://img.shields.io/static/v1?label=UNITED24&message=support%20Ukraine&color=blue)](https://u24.gov.ua/)

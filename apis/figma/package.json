@@ -21,7 +21,8 @@
   "homepage": "https://github.com/zemd/apis/tree/main/apis/figma",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zemd/apis.git"
+    "url": "git+https://github.com/zemd/apis.git",
+    "directory": "apis/figma"
   },
   "bugs": {
     "url": "https://github.com/zemd/apis/issues"
