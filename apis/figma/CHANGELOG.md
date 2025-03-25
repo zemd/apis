@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.4
+
+### Patch Changes
+
+- 2c05de9: update openapi.json
+
 ## 3.0.3
 
 ### Patch Changes
