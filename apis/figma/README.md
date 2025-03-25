@@ -16,14 +16,13 @@ import { figma, figmaToken, header } from "@zemd/figma-rest-api";
 
 const client = figma([figmaToken("your-figma-token")]);
 // alternatively you can use figma([header("Authorization", "Bearer <TOKEN>")]);
-const response = await client.files.getFile("filekey");
+const response = await client.v1.files.getFile("filekey");
 console.log(await response.json());
 ```
 
 ## Advanced usage
 
-There might be cases when the library was not updated to the latest version of the Figma API, or you want to use
-some experimental features. In this case, you can construct your own api call using the essentials of the library.
+There might be cases when the library was not updated to the latest version of the Figma API, or you want to use some experimental features. In this case, you can construct your own api call using the essentials of the library.
 
 Since the library is built on top of `@zemd/http-client` you can compose different configurations together.
 
