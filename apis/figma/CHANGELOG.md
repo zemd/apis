@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.5
+
+### Patch Changes
+
+- 7268651: Update Readme.md
+
 ## 3.0.4
 
 ### Patch Changes
