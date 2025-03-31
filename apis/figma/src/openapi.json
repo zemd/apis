@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Figma API",
-    "version": "0.25.0",
+    "version": "0.27.0",
     "description": "This is the OpenAPI specification for the [Figma REST API](https://www.figma.com/developers/api).\n\nNote: we are releasing the OpenAPI specification as a beta given the large surface area and complexity of the REST API. If you notice any inaccuracies with the specification, please [file an issue](https://github.com/figma/rest-api-spec/issues).",
     "termsOfService": "https://www.figma.com/developer-terms/",
     "contact": {
@@ -3412,6 +3412,23 @@
                 "items": {
                   "$ref": "#/components/schemas/VariableAlias"
                 }
+              },
+              "rectangleCornerRadii": {
+                "type": "object",
+                "properties": {
+                  "RECTANGLE_TOP_LEFT_CORNER_RADIUS": {
+                    "$ref": "#/components/schemas/VariableAlias"
+                  },
+                  "RECTANGLE_TOP_RIGHT_CORNER_RADIUS": {
+                    "$ref": "#/components/schemas/VariableAlias"
+                  },
+                  "RECTANGLE_BOTTOM_LEFT_CORNER_RADIUS": {
+                    "$ref": "#/components/schemas/VariableAlias"
+                  },
+                  "RECTANGLE_BOTTOM_RIGHT_CORNER_RADIUS": {
+                    "$ref": "#/components/schemas/VariableAlias"
+                  }
+                }
               }
             }
           },
@@ -4259,6 +4276,13 @@
               "prototypeDevice": {
                 "$ref": "#/components/schemas/PrototypeDevice",
                 "description": "The device used to view a prototype."
+              },
+              "prototypeBackgrounds": {
+                "type": "array",
+                "description": "The background color of the prototype (currently only supports a single solid color paint).",
+                "items": {
+                  "$ref": "#/components/schemas/RGBA"
+                }
               },
               "measurements": {
                 "type": "array",
@@ -7147,6 +7171,49 @@
           "pageName": {
             "type": "string",
             "description": "The name of the page containing the frame node."
+          },
+          "containingStateGroup": {
+            "deprecated": true,
+            "description": "Deprecated - Use containingComponentSet instead.",
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "nodeId": {
+                    "type": "string",
+                    "description": "The ID of the state group node."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the state group node."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "containingComponentSet": {
+            "description": "The component set node that contains the frame node.",
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "nodeId": {
+                    "type": "string",
+                    "description": "The ID of the component set node."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the component set node."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": ["pageId", "pageName"]
@@ -8206,7 +8273,8 @@
           "LINE_HEIGHT",
           "LETTER_SPACING",
           "PARAGRAPH_SPACING",
-          "PARAGRAPH_INDENT"
+          "PARAGRAPH_INDENT",
+          "FONT_VARIATIONS"
         ],
         "description": "Scopes allow a variable to be shown or hidden in the variable picker for various fields. This declutters the Figma UI if you have a large number of variables. Variable scopes are currently supported on `FLOAT`, `STRING`, and `COLOR` variables.\n\n`ALL_SCOPES` is a special scope that means that the variable will be shown in the variable picker for all variable fields. If `ALL_SCOPES` is set, no additional scopes can be set.\n\n`ALL_FILLS` is a special scope that means that the variable will be shown in the variable picker for all fill fields. If `ALL_FILLS` is set, no additional fill scopes can be set.\n\nValid scopes for `FLOAT` variables:\n- `ALL_SCOPES`\n- `TEXT_CONTENT`\n- `WIDTH_HEIGHT`\n- `GAP`\n- `STROKE_FLOAT`\n- `EFFECT_FLOAT`\n- `OPACITY`\n- `FONT_WEIGHT`\n- `FONT_SIZE`\n- `LINE_HEIGHT`\n- `LETTER_SPACING`\n- `PARAGRAPH_SPACING`\n- `PARAGRAPH_INDENT`\n\nValid scopes for `STRING` variables:\n- `ALL_SCOPES`\n- `TEXT_CONTENT`\n- `FONT_FAMILY`\n- `FONT_STYLE`\n\nValid scopes for `COLOR` variables:\n- `ALL_SCOPES`\n- `ALL_FILLS`\n- `FRAME_FILL`\n- `SHAPE_FILL`\n- `TEXT_FILL`\n- `STROKE_COLOR`\n- `EFFECT_COLOR`"
       },
