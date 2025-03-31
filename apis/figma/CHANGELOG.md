@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.6
+
+### Patch Changes
+
+- a65d03b: Update deps
+
 ## 3.0.5
 
 ### Patch Changes
