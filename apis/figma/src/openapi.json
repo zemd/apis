@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Figma API",
-    "version": "0.27.0",
+    "version": "0.28.0",
     "description": "This is the OpenAPI specification for the [Figma REST API](https://www.figma.com/developers/api).\n\nNote: we are releasing the OpenAPI specification as a beta given the large surface area and complexity of the REST API. If you notice any inaccuracies with the specification, please [file an issue](https://github.com/figma/rest-api-spec/issues).",
     "termsOfService": "https://www.figma.com/developer-terms/",
     "contact": {
@@ -2221,7 +2221,7 @@
             "in": "query",
             "description": "The ID of the user to query payment information about. You can get the user ID by having the user OAuth2 to the Figma REST API.",
             "schema": {
-              "type": "number"
+              "type": "string"
             }
           },
           {
@@ -2229,7 +2229,7 @@
             "in": "query",
             "description": "The ID of the Community file to query a user's payment information on. You can get the Community file ID from the file's Community page (look for the number after \"file/\" in the URL). Provide exactly one of \"community_file_id\", \"plugin_id\", or \"widget_id\".",
             "schema": {
-              "type": "number"
+              "type": "string"
             }
           },
           {
@@ -2237,7 +2237,7 @@
             "in": "query",
             "description": "The ID of the plugin to query a user's payment information on. You can get the plugin ID from the plugin's manifest, or from the plugin's Community page (look for the number after \"plugin/\" in the URL). Provide exactly one of \"community_file_id\", \"plugin_id\", or \"widget_id\".",
             "schema": {
-              "type": "number"
+              "type": "string"
             }
           },
           {
@@ -2245,7 +2245,7 @@
             "in": "query",
             "description": "The ID of the widget to query a user's payment information on. You can get the widget ID from the widget's manifest, or from the widget's Community page (look for the number after \"widget/\" in the URL). Provide exactly one of \"community_file_id\", \"plugin_id\", or \"widget_id\".",
             "schema": {
-              "type": "number"
+              "type": "string"
             }
           }
         ],
