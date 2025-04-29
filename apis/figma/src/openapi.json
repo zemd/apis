@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Figma API",
-    "version": "0.28.0",
+    "version": "0.29.0",
     "description": "This is the OpenAPI specification for the [Figma REST API](https://www.figma.com/developers/api).\n\nNote: we are releasing the OpenAPI specification as a beta given the large surface area and complexity of the REST API. If you notice any inaccuracies with the specification, please [file an issue](https://github.com/figma/rest-api-spec/issues).",
     "termsOfService": "https://www.figma.com/developer-terms/",
     "contact": {
@@ -142,7 +142,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["file_content:read", "files:read"]
           }
         ],
         "description": "Returns the document identified by `file_key` as a JSON object. The file key can be parsed from any Figma file url: `https://www.figma.com/file/{file_key}/{title}`.\n\nThe `document` property contains a node of type `DOCUMENT`.\n\nThe `components` property contains a mapping from node IDs to component metadata. This is to help you determine which components each instance comes from.",
@@ -238,7 +238,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["file_content:read", "files:read"]
           }
         ],
         "description": "Returns the nodes referenced to by `ids` as a JSON object. The nodes are retrieved from the Figma file referenced to by `file_key`.\n\nThe node ID and file key can be parsed from any Figma node url: `https://www.figma.com/file/{file_key}/{title}?node-id={id}`\n\nThe `name`, `lastModified`, `thumbnailUrl`, `editorType`, and `version` attributes are all metadata of the specified file.\n\nThe `linkAccess` field describes the file link share permission level. There are 5 types of permissions a shared link can have: `\"inherit\"`, `\"view\"`, `\"edit\"`, `\"org_view\"`, and `\"org_edit\"`. `\"inherit\"` is the default permission applied to files created in a team project, and will inherit the project's permissions. `\"org_view\"` and `\"org_edit\"` restrict the link to org users.\n\nThe `document` attribute contains a Node of type `DOCUMENT`.\n\nThe `components` key contains a mapping from node IDs to component metadata. This is to help you determine which components each instance comes from.\n\nBy default, no vector data is returned. To return vector data, pass the geometry=paths parameter to the endpoint.\nEach node can also inherit properties from applicable styles. The styles key contains a mapping from style IDs to style metadata.\n\nImportant: the nodes map may contain values that are `null`. This may be due to the node id not existing within the specified file.",
@@ -326,7 +326,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["file_content:read", "files:read"]
           }
         ],
         "description": "Renders images from a file.\n\nIf no error occurs, `\"images\"` will be populated with a map from node IDs to URLs of the rendered images, and `\"status\"` will be omitted. The image assets will expire after 30 days. Images up to 32 megapixels can be exported. Any images that are larger will be scaled down.\n\nImportant: the image map may contain values that are `null`. This indicates that rendering of that specific node has failed. This may be due to the node id not existing, or other reasons such has the node having no renderable components. It is guaranteed that any node that was requested for rendering will be represented in this map whether or not the render succeeded.\n\nTo render multiple images from the same file, use the `ids` query parameter to specify multiple node ids.\n\n```\nGET /v1/images/:key?ids=1:2,1:3,1:4\n```\n",
@@ -464,7 +464,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["file_content:read", "files:read"]
           }
         ],
         "description": "Returns download links for all images present in image fills in a document. Image fills are how Figma represents any user supplied images. When you drag an image into Figma, we create a rectangle with a single fill that represents the image, and the user is able to transform the rectangle (and properties on the fill) as they wish.\n\nThis endpoint returns a mapping from image references to the URLs at which the images may be download. Image URLs will expire after no more than 14 days. Image references are located in the output of the GET files endpoint under the `imageRef` attribute in a `Paint`.",
@@ -511,7 +511,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["projects:read", "files:read"]
           }
         ],
         "description": "You can use this endpoint to get a list of all the Projects within the specified team. This will only return projects visible to the authenticated user or owner of the developer token. Note: it is not currently possible to programmatically obtain the team id of a user just from a token. To obtain a team id, navigate to a team page of a team you are a part of. The team id will be present in the URL after the word team and before your team name.",
@@ -555,7 +555,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["projects:read", "files:read"]
           }
         ],
         "description": "Get a list of all the Files within the specified project.",
@@ -608,7 +608,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["file_versions:read", "files:read"]
           }
         ],
         "description": "This endpoint fetches the version history of a file, allowing you to see the progression of a file over time. You can then use this information to render a specific version of the file, via another endpoint.",
@@ -677,7 +677,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["file_comments:read", "files:read"]
           }
         ],
         "description": "Gets a list of comments left on the file.",
@@ -866,7 +866,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["file_comments:read", "files:read"]
           }
         ],
         "description": "Gets a paginated list of reactions left on the comment.",
@@ -1057,7 +1057,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["current_user:read", "files:read"]
           }
         ],
         "description": "Returns the user information for the currently authenticated user.",
@@ -1087,7 +1087,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["team_library_content:read", "files:read"]
           }
         ],
         "description": "Get a paginated list of published components within a team library.",
@@ -1159,7 +1159,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["library_content:read", "files:read"]
           }
         ],
         "description": "Get a list of published components within a file library.",
@@ -1206,7 +1206,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["library_assets:read", "files:read"]
           }
         ],
         "description": "Get metadata on a component by key.",
@@ -1253,7 +1253,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["team_library_content:read", "files:read"]
           }
         ],
         "description": "Get a paginated list of published component sets within a team library.",
@@ -1325,7 +1325,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["library_content:read", "files:read"]
           }
         ],
         "description": "Get a list of published component sets within a file library.",
@@ -1372,7 +1372,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["library_assets:read", "files:read"]
           }
         ],
         "description": "Get metadata on a published component set by key.",
@@ -1419,7 +1419,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["team_library_content:read", "files:read"]
           }
         ],
         "description": "Get a paginated list of published styles within a team library.",
@@ -1491,7 +1491,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["library_content:read", "files:read"]
           }
         ],
         "description": "Get a list of published styles within a file library.",
@@ -1538,7 +1538,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["library_assets:read", "files:read"]
           }
         ],
         "description": "Get metadata on a style by key.",
@@ -1867,7 +1867,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["webhooks:read", "files:read"]
           }
         ],
         "description": "Get a webhook by ID.",
@@ -2037,7 +2037,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["webhooks:read", "files:read"]
           }
         ],
         "description": "Returns all webhooks registered under the specified team.",
@@ -2081,7 +2081,7 @@
             "PersonalAccessToken": []
           },
           {
-            "OAuth2": ["files:read"]
+            "OAuth2": ["webhooks:read", "files:read"]
           }
         ],
         "description": "Returns all webhook requests sent within the last week. Useful for debugging.",
@@ -3164,13 +3164,22 @@
             "tokenUrl": "https://api.figma.com/v1/oauth/token",
             "refreshUrl": "https://api.figma.com/v1/oauth/refresh",
             "scopes": {
-              "files:read": "Read files, projects, users, versions, comments, components & styles, and webhooks.",
-              "file_variables:read": "Read variables in Figma file. Note: this is only available to members in Enterprise organizations.",
-              "file_variables:write": "Write to variables in Figma file. Note: this is only available to members in Enterprise organizations.",
+              "current_user:read": "Read your name, email, and profile image.",
+              "file_comments:read": "Read the comments for files.",
               "file_comments:write": "Post and delete comments and comment reactions in files.",
+              "file_content:read": "Read the contents of files, such as nodes and the editor type.",
               "file_dev_resources:read": "Read dev resources in files.",
               "file_dev_resources:write": "Write to dev resources in files.",
+              "file_variables:read": "Read variables in Figma file. Note: this is only available to members in Enterprise organizations.",
+              "file_variables:write": "Write to variables in Figma file. Note: this is only available to members in Enterprise organizations.",
+              "file_versions:read": "Read the version history for files you can access.",
+              "files:read": "Deprecated. Read files, projects, users, versions, comments, components & styles, and webhooks.",
               "library_analytics:read": "Read library analytics data.",
+              "library_assets:read": "Read data of individual published components and styles.",
+              "library_content:read": "Read published components and styles of files.",
+              "projects:read": "List projects and files in projects.",
+              "team_library_content:read": "Read published components and styles of teams.",
+              "webhooks:read": "Read metadata of webhooks.",
               "webhooks:write": "Create and manage webhooks."
             }
           }
