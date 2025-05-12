@@ -12,6 +12,8 @@ import type {
   GetImagesQueryParams,
   GetImageFillsResponse,
   GetImageFillsPathParams,
+  GetFileMetaResponse,
+  GetFileMetaPathParams,
   GetTeamProjectsResponse,
   GetTeamProjectsPathParams,
   GetProjectFilesResponse,
@@ -129,6 +131,9 @@ export const figma = (initialTransformers: TFetchTransformer[]) => {
         },
         getImageFills: async (fileKey: GetImageFillsPathParams["file_key"]) => {
           return endpoint<GetImageFillsResponse>(`/v1/files/${fileKey}/images`, [method("GET")]);
+        },
+        getFileMeta: async (fileKey: GetFileMetaPathParams["file_key"]) => {
+          return endpoint<GetFileMetaResponse>(`/v1/files/${fileKey}/meta`, [method("GET")]);
         },
         getFileVersions: async (
           fileKey: GetFileVersionsPathParams["file_key"],
