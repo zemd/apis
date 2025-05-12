@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.9
+
+### Patch Changes
+
+- 3744df9: update figma types
+
 ## 3.0.8
 
 ### Patch Changes
