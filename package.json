@@ -15,7 +15,7 @@
     "lint-publint": "pnpm --filter \"./packages/*\" --filter \"./apis/*\" --no-bail run lint-publint"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.2",
+    "@changesets/cli": "^2.29.3",
     "@zemd/eslint-ts": "^1.0.21",
     "@zemd/tsconfig": "^1.5.0",
     "eslint": "^9.26.0",
