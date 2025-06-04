@@ -61,6 +61,8 @@ import type {
   GetFileStylesPathParams,
   GetStyleResponse,
   GetStylePathParams,
+  GetWebhooksResponse,
+  GetWebhooksQueryParams,
   PostWebhookResponse,
   PostWebhookRequestBody,
   GetWebhookResponse,
@@ -392,6 +394,13 @@ export const figma = (initialTransformers: TFetchTransformer[]) => {
     },
     v2: {
       webhooks: {
+        getWebhooks: async (options?: GetWebhooksQueryParams) => {
+          const transformers = [method("GET")];
+          if (options) {
+            transformers.push(query(options));
+          }
+          return endpoint<GetWebhooksResponse>(`/v2/webhooks`, transformers);
+        },
         postWebhook: async (obj: PostWebhookRequestBody) => {
           return endpoint<PostWebhookResponse>(`/v2/webhooks`, [method("POST"), body(JSON.stringify(obj))]);
         },
