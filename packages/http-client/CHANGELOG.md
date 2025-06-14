@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.2
+
+### Patch Changes
+
+- 9963098: pass fetchFn in createEndpoint parameters
+
 ## 4.0.1
 
 ### Patch Changes
