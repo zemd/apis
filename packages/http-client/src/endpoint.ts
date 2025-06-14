@@ -1,5 +1,5 @@
 import { compose } from "./compose";
-import type { TFetchTransformer } from "./type";
+import type { TFetchFn, TFetchTransformer } from "./type";
 
 type TEndpointOptions = {
   parseResponse: "json" | "text" | false;
@@ -27,8 +27,9 @@ const waitFetch = async <ArgResponseType>(
 export const createEndpoint = (
   transformers: TFetchTransformer[],
   options: TEndpointOptions = { parseResponse: "json" },
+  fetchFn: TFetchFn = fetch,
 ) => {
   return async <ResultType = Response>(url: string, endpointTransformers: TFetchTransformer[]) => {
-    return waitFetch<ResultType>(compose(transformers.concat(endpointTransformers))(url), options);
+    return waitFetch<ResultType>(compose(transformers.concat(endpointTransformers), fetchFn)(url), options);
   };
 };
