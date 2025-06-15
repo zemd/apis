@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.3
+
+### Patch Changes
+
+- 4e28929: add simple fetchMock implementation
+
 ## 4.0.2
 
 ### Patch Changes
