@@ -83,4 +83,24 @@ describe("fetchMock", () => {
     const data = await response.json();
     expect(data).toEqual({ def: true });
   });
+
+  it("matches endpoints using regex-like patterns", async () => {
+    addEndpointMock("/test/regex/\\d+", "GET", () => ({ regex: true }));
+
+    const url = "https://example.com/test/regex/123";
+    const response = await fetchMock(url, { method: "GET" });
+    expect(response.status).toBe(200);
+    const data = await response.json();
+    expect(data).toEqual({ regex: true });
+  });
+
+  it("matches endpoints that include full URL", async () => {
+    addEndpointMock("https://example.com/test/full/url", "GET", () => ({ success: true }));
+
+    const url = "https://example.com/test/full/url";
+    const response = await fetchMock(url, { method: "GET" });
+    expect(response.status).toBe(200);
+    const data = await response.json();
+    expect(data).toEqual({ success: true });
+  });
 });

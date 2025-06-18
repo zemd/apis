@@ -1,6 +1,6 @@
 import type { TFetchFnParams } from "./type";
 
-const mockRegistry = new Map<symbol, (url: URL, options?: TFetchFnParams[1]) => unknown>();
+const mockRegistry = new Map<string, (url: URL, options?: TFetchFnParams[1]) => unknown>();
 
 const getUrl = (url: TFetchFnParams[0]) => {
   if (url instanceof URL) {
@@ -10,6 +10,15 @@ const getUrl = (url: TFetchFnParams[0]) => {
     return new URL(url);
   }
   return new URL(url.url);
+};
+
+const getKey = (pathname: string, method: string): string => {
+  for (const key of mockRegistry.keys()) {
+    if (new RegExp(`^${key}$`).test(`${method}\.${pathname}`)) {
+      return key;
+    }
+  }
+  return "";
 };
 
 /**
@@ -30,8 +39,9 @@ export const fetchMock = async (url: TFetchFnParams[0], options?: TFetchFnParams
   const method = options?.method || "GET";
   const urlObj = getUrl(url);
 
-  const key = Symbol.for(`${method.toUpperCase()}:${urlObj.pathname}`);
-  const implementation = mockRegistry.get(key);
+  const implementation =
+    mockRegistry.get(getKey(`${urlObj.origin}${urlObj.pathname}`, method)) ??
+    mockRegistry.get(getKey(`${urlObj.pathname}`, method));
 
   if (implementation) {
     try {
@@ -45,7 +55,7 @@ export const fetchMock = async (url: TFetchFnParams[0], options?: TFetchFnParams
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
-      console.error(`Error in mock implementation for ${key.toString()}`, error);
+      console.error(`Error in mock implementation for the URL: ${url.toString()}`, error);
       return new Response(JSON.stringify({ error: "Internal Server Error" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -61,5 +71,5 @@ export const addEndpointMock = (
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD",
   implementation: (url: URL, options?: TFetchFnParams[1]) => unknown,
 ) => {
-  mockRegistry.set(Symbol.for(`${method.toUpperCase()}:${pathname}`), implementation);
+  mockRegistry.set(`${method.toUpperCase()}.${pathname}`, implementation);
 };
