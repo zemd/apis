@@ -1,5 +1,12 @@
 # @zemd/figma-rest-api
 
+## 3.0.13
+
+### Patch Changes
+
+- Updated dependencies [44ca01c]
+  - @zemd/http-client@4.0.4
+
 ## 3.0.12
 
 ### Patch Changes

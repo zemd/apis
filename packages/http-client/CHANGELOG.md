@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.4
+
+### Patch Changes
+
+- 44ca01c: use RegExp in mocks for matching pathnames
+
 ## 4.0.3
 
 ### Patch Changes
