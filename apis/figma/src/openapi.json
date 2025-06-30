@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Figma API",
-    "version": "0.31.0",
+    "version": "0.32.0",
     "description": "This is the OpenAPI specification for the [Figma REST API](https://www.figma.com/developers/api).\n\nNote: we are releasing the OpenAPI specification as a beta given the large surface area and complexity of the REST API. If you notice any inaccuracies with the specification, please [file an issue](https://github.com/figma/rest-api-spec/issues).",
     "termsOfService": "https://www.figma.com/developer-terms/",
     "contact": {
@@ -1152,7 +1152,7 @@
           {
             "name": "page_size",
             "in": "query",
-            "description": "Number of items to return in a paged list of results. Defaults to 30.",
+            "description": "Number of items to return in a paged list of results. Defaults to 30. Maximum of 1000.",
             "schema": {
               "type": "number",
               "default": 30
@@ -6800,7 +6800,7 @@
       "ConnectorLineType": {
         "type": "string",
         "description": "Connector line type.",
-        "enum": ["STRAIGHT", "ELBOWED"]
+        "enum": ["STRAIGHT", "ELBOWED", "CURVED"]
       },
       "ConnectorTextBackground": {
         "allOf": [
