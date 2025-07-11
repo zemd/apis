@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.5
+
+### Patch Changes
+
+- f94f8c3: proper handling errors inside endpoint
+
 ## 4.0.4
 
 ### Patch Changes
