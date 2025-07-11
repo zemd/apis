@@ -15,6 +15,13 @@ const waitFetch = async <ArgResponseType>(
     | ({ parseResponse: false } & (ArgResponseType extends Response ? {} : never)),
 ): Promise<ArgResponseType> => {
   const response = await fetch;
+  if (!response.ok) {
+    throw new Error(`HTTP error occur. status: ${response.status}, url: ${response.url}`, {
+      cause: {
+        response,
+      },
+    });
+  }
   if (parseResponse === "json") {
     return (await response.json()) as ArgResponseType;
   }

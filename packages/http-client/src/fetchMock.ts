@@ -73,3 +73,7 @@ export const addEndpointMock = (
 ) => {
   mockRegistry.set(`${method.toUpperCase()}.${pathname}`, implementation);
 };
+
+export const clearEndpointMocks = () => {
+  mockRegistry.clear();
+};

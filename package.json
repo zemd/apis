@@ -11,6 +11,7 @@
     "release": "pnpm run build && changeset publish",
     "changeset": "changeset",
     "test": "turbo test",
+    "test-http-client": "turbo test --filter @zemd/http-client",
     "prepare": "husky",
     "lint-publint": "pnpm --filter \"./packages/*\" --filter \"./apis/*\" --no-bail run lint-publint"
   },
