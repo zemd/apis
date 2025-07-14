@@ -47,8 +47,8 @@
     "lint-publint": "publint"
   },
   "devDependencies": {
-    "@figma/rest-api-spec": "^0.32.0",
-    "@types/node": "^24.0.10",
+    "@figma/rest-api-spec": "^0.33.0",
+    "@types/node": "^24.0.13",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
     "change-case": "^5.4.4",
