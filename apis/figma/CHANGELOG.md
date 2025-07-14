@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.16
+
+### Patch Changes
+
+- a060ab5: bump dependencies
+
 ## 3.0.15
 
 ### Patch Changes
