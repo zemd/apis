@@ -1,7 +1,7 @@
 {
   "name": "@zemd/figma-rest-api",
   "type": "module",
-  "version": "3.0.15",
+  "version": "3.0.16",
   "license": "Apache-2.0",
   "description": "A lightweight fetch-based and type-safe Figma Rest API client.",
   "keywords": [
