@@ -13,14 +13,14 @@ catalogs:
       specifier: ^8.4.0
       version: 8.5.0
     typescript:
-      specifier: ^5.8.2
-      version: 5.8.3
+      specifier: ^5.9.2
+      version: 5.9.2
     vitest:
       specifier: ^3.2.4
       version: 3.2.4
     zod:
-      specifier: ^3.25.74
-      version: 3.25.74
+      specifier: ^4.0.14
+      version: 4.0.14
 
 overrides:
   vite@>=6.3.0 <=6.3.3: '>=6.3.4'
@@ -82,10 +82,10 @@ importers:
         version: 26.0.0
       tsup:
         specifier: 'catalog:'
-        version: 8.5.0(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.3)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
         specifier: 'catalog:'
-        version: 5.8.3
+        version: 5.9.2
       yaml:
         specifier: ^2.7.1
         version: 2.8.0
@@ -97,14 +97,14 @@ importers:
         version: 3.0.0
       zod:
         specifier: 'catalog:'
-        version: 3.25.74
+        version: 4.0.14
     devDependencies:
       '@zemd/tsconfig':
         specifier: 'catalog:'
         version: 1.5.0
       typescript:
         specifier: 'catalog:'
-        version: 5.8.3
+        version: 5.9.2
 
   packages/http-client:
     devDependencies:
@@ -113,10 +113,10 @@ importers:
         version: 1.5.0
       tsup:
         specifier: 'catalog:'
-        version: 8.5.0(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.3)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
         specifier: 'catalog:'
-        version: 5.8.3
+        version: 5.9.2
       vitest:
         specifier: 'catalog:'
         version: 3.2.4(@types/node@24.1.0)(yaml@2.8.0)
@@ -125,14 +125,14 @@ importers:
     dependencies:
       zod:
         specifier: 'catalog:'
-        version: 3.25.74
+        version: 4.0.14
     devDependencies:
       '@zemd/tsconfig':
         specifier: 'catalog:'
         version: 1.5.0
       typescript:
         specifier: 'catalog:'
-        version: 5.8.3
+        version: 5.9.2
 
 packages:
 
@@ -2109,11 +2109,6 @@ packages:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
 
-  typescript@5.8.3:
-    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.9.2:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
@@ -2268,8 +2263,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@3.25.74:
-    resolution: {integrity: sha512-J8poo92VuhKjNknViHRAIuuN6li/EwFbAC8OedzI8uxpEPGiXHGQu9wemIAioIpqgfB4SySaJhdk0mH5Y4ICBg==}
+  zod@4.0.14:
+    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
 
 snapshots:
 
@@ -4310,7 +4305,7 @@ snapshots:
       '@ts-morph/common': 0.27.0
       code-block-writer: 13.0.3
 
-  tsup@8.5.0(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0):
+  tsup@8.5.0(postcss@8.5.3)(typescript@5.9.2)(yaml@2.8.0):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.25.4)
       cac: 6.7.14
@@ -4331,7 +4326,7 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       postcss: 8.5.3
-      typescript: 5.8.3
+      typescript: 5.9.2
     transitivePeerDependencies:
       - jiti
       - supports-color
@@ -4401,8 +4396,6 @@ snapshots:
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
-
-  typescript@5.8.3: {}
 
   typescript@5.9.2: {}
 
@@ -4580,4 +4573,4 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod@3.25.74: {}
+  zod@4.0.14: {}
