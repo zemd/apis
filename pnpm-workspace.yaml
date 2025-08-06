@@ -4,9 +4,9 @@ packages:
 catalog:
   "@zemd/tsconfig": ^1.4.0
   tsup: ^8.4.0
-  typescript: ^5.8.2
+  typescript: ^5.9.2
   vitest: ^3.2.4
-  zod: ^3.25.74
+  zod: ^4.0.14
 overrides:
   vite@>=6.3.0 <=6.3.3: ">=6.3.4"
   brace-expansion@>=1.0.0 <=1.1.11: ">=1.1.12"
