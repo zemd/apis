@@ -48,14 +48,14 @@
   },
   "devDependencies": {
     "@figma/rest-api-spec": "^0.33.0",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.2.1",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
     "change-case": "^5.4.4",
     "ts-morph": "^26.0.0",
     "tsup": "catalog:",
     "typescript": "catalog:",
-    "yaml": "^2.7.1"
+    "yaml": "^2.8.1"
   },
   "dependencies": {
     "@zemd/http-client": "workspace:*"
