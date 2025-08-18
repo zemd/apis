@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createEndpoint } from "./endpoint";
 import { fetchMock, addEndpointMock, clearEndpointMocks } from "./fetchMock";
 import type { TFetchTransformer } from "./type";
-import { json, prefix } from "./transformers";
+import { json, method, prefix } from "./transformers";
 
 describe("createEndpoint", () => {
   beforeEach(() => {
@@ -173,6 +173,54 @@ describe("createEndpoint", () => {
 
       expect(globalFetch).toHaveBeenCalledWith("https://api.example.com/test");
       expect(result).toEqual({ global: true });
+    });
+  });
+
+  describe("with no parsing", () => {
+    it("should return raw Response object", async () => {
+      const responseData = new Response(JSON.stringify({ test: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+      addEndpointMock("/raw", "GET", () => responseData);
+
+      const endpoint = createEndpoint([prefix("https://example.com")], { parseResponse: false }, fetchMock);
+      const result = await endpoint<Response>("/raw", []);
+
+      expect(result).toBeInstanceOf(Response);
+      expect(result.status).toBe(200);
+    });
+
+    it("should return Response object for 204 No Content regardless of parseResponse option", async () => {
+      const noContentResponse = new Response(null, { status: 204 });
+      addEndpointMock("/no-content", "DELETE", () => noContentResponse);
+
+      const jsonEndpoint = createEndpoint(
+        [prefix("https://example.com"), method("DELETE")],
+        { parseResponse: "json" },
+        fetchMock,
+      );
+      const textEndpoint = createEndpoint(
+        [prefix("https://example.com"), method("DELETE")],
+        { parseResponse: "text" },
+        fetchMock,
+      );
+      const rawEndpoint = createEndpoint(
+        [prefix("https://example.com"), method("DELETE")],
+        { parseResponse: false },
+        fetchMock,
+      );
+
+      const jsonResult = await jsonEndpoint<Response>("/no-content", []);
+      const textResult = await textEndpoint<Response>("/no-content", []);
+      const rawResult = await rawEndpoint<Response>("/no-content", []);
+
+      expect(jsonResult).toBeInstanceOf(Response);
+      expect(jsonResult.status).toBe(204);
+      expect(textResult).toBeInstanceOf(Response);
+      expect(textResult.status).toBe(204);
+      expect(rawResult).toBeInstanceOf(Response);
+      expect(rawResult.status).toBe(204);
     });
   });
 });
