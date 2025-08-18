@@ -22,6 +22,9 @@ const waitFetch = async <ArgResponseType>(
       },
     });
   }
+  if (response.status === 204) {
+    return response as any; // 204 No Content
+  }
   if (parseResponse === "json") {
     return (await response.json()) as ArgResponseType;
   }
