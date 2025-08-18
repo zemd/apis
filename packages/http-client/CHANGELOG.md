@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.6
+
+### Patch Changes
+
+- 66436da: avoid parsing response if no content status is sent
+
 ## 4.0.5
 
 ### Patch Changes
