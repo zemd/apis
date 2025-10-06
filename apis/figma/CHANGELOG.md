@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.18
+
+### Patch Changes
+
+- 05722d1: bump deps
+
 ## 3.0.17
 
 ### Patch Changes
