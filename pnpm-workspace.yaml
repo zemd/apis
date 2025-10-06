@@ -4,7 +4,7 @@ packages:
 catalog:
   "@zemd/tsconfig": ^1.4.0
   tsup: ^8.4.0
-  typescript: ^5.9.2
+  typescript: ^5.9.3
   vitest: ^3.2.4
   zod: ^4.1.11
 overrides:
