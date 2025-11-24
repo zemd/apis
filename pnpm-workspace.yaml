@@ -3,10 +3,10 @@ packages:
   - apis/*
 catalog:
   "@zemd/tsconfig": ^1.4.0
-  tsup: ^8.4.0
+  tsup: ^8.5.1
   typescript: ^5.9.3
-  vitest: ^4.0.8
-  zod: ^4.1.12
+  vitest: ^4.0.13
+  zod: ^4.1.13
 overrides:
   vite@>=6.3.0 <=6.3.3: ">=6.3.4"
   brace-expansion@>=1.0.0 <=1.1.11: ">=1.1.12"
