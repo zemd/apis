@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@figma/rest-api-spec": "^0.34.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.2",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
     "change-case": "^5.4.4",
