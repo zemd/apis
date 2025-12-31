@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Figma API",
-    "version": "0.34.0",
+    "version": "0.35.0",
     "description": "This is the OpenAPI specification for the [Figma REST API](https://www.figma.com/developers/api).\n\nNote: we are releasing the OpenAPI specification as a beta given the large surface area and complexity of the REST API. If you notice any inaccuracies with the specification, please [file an issue](https://github.com/figma/rest-api-spec/issues).",
     "termsOfService": "https://www.figma.com/developer-terms/",
     "contact": {
@@ -4046,6 +4046,14 @@
           }
         }
       },
+      "VariableWidthStrokesTrait": {
+        "type": "object",
+        "properties": {}
+      },
+      "ComplexStrokesTrait": {
+        "type": "object",
+        "properties": {}
+      },
       "CornerTrait": {
         "type": "object",
         "properties": {
@@ -4199,7 +4207,7 @@
             "description": "Map from ID to TextPathTypeStyle for looking up style overrides."
           }
         },
-        "required": ["characters", "style", "characterStyleOverrides", "styleOverrideTable"]
+        "required": ["characters", "style", "characterStyleOverrides", "styleOverrideTable", "textPathStartData"]
       },
       "HasTextSublayerTrait": {
         "type": "object",
@@ -4259,6 +4267,10 @@
         "type": "object",
         "properties": {}
       },
+      "TransformModifiersTrait": {
+        "type": "object",
+        "properties": {}
+      },
       "FrameTraits": {
         "allOf": [
           {
@@ -4298,6 +4310,12 @@
             "$ref": "#/components/schemas/IndividualStrokesTrait"
           },
           {
+            "$ref": "#/components/schemas/VariableWidthStrokesTrait"
+          },
+          {
+            "$ref": "#/components/schemas/ComplexStrokesTrait"
+          },
+          {
             "$ref": "#/components/schemas/DevStatusTrait"
           },
           {
@@ -4330,6 +4348,12 @@
           },
           {
             "$ref": "#/components/schemas/TransitionSourceTrait"
+          },
+          {
+            "$ref": "#/components/schemas/VariableWidthStrokesTrait"
+          },
+          {
+            "$ref": "#/components/schemas/ComplexStrokesTrait"
           }
         ]
       },
@@ -5091,6 +5115,9 @@
           },
           {
             "$ref": "#/components/schemas/FrameTraits"
+          },
+          {
+            "$ref": "#/components/schemas/TransformModifiersTrait"
           }
         ]
       },
@@ -9015,6 +9042,10 @@
                   "type": "string",
                   "description": "The unique identifier of this mode."
                 },
+                "parentModeId": {
+                  "type": "string",
+                  "description": "The unique identifier of this mode's parent mode from the parent variable collection. This will be `undefined` if this mode does not inherit from a parent mode."
+                },
                 "name": {
                   "type": "string",
                   "description": "The name of this mode."
@@ -9030,6 +9061,24 @@
           "remote": {
             "type": "boolean",
             "description": "Whether this variable collection is remote."
+          },
+          "isExtension": {
+            "type": "boolean",
+            "description": "Whether this variable collection is an extension of another variable collection."
+          },
+          "parentVariableCollectionId": {
+            "type": "string",
+            "description": "The id of the parent variable collection that this variable collection is an extension of. If this variable collection is not an extension, this value will be `undefined`."
+          },
+          "variableOverrides": {
+            "type": "object",
+            "description": "The overrides for the variables in this variable collection as a map of variable ids to a map of mode ids to variable values.",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/VariableValue"
+              }
+            }
           },
           "hiddenFromPublishing": {
             "type": "boolean",
@@ -9224,6 +9273,17 @@
             "type": "boolean",
             "description": "Whether this variable collection is hidden when publishing the current file as a library.",
             "default": false
+          },
+          "parentVariableCollectionId": {
+            "type": "string",
+            "description": "The id of the parent variable collection that this variable collection is extending from."
+          },
+          "initialModeIdToParentModeIdMapping": {
+            "type": "object",
+            "description": "Maps inherited modes from the parent variable collection to the initial mode ids on the extended variable collection.",
+            "additionalProperties": {
+              "type": "string"
+            }
           }
         },
         "required": ["action", "name"]
@@ -9309,7 +9369,7 @@
           },
           "variableCollectionId": {
             "type": "string",
-            "description": "The variable collection that will contain the mode. You can use the temporary id of a variable collection."
+            "description": "The variable collection that will contain the mode. You can use the temporary id of a variable collection. New modes cannot be created on extended collections."
           }
         },
         "required": ["action", "name", "variableCollectionId"]
@@ -9333,7 +9393,7 @@
           },
           "variableCollectionId": {
             "type": "string",
-            "description": "The variable collection that contains the mode."
+            "description": "The variable collection that contains the mode. Modes cannot be updated on extended collections."
           }
         },
         "required": ["action", "id", "variableCollectionId"]
@@ -9349,7 +9409,7 @@
           },
           "id": {
             "type": "string",
-            "description": "The id of the variable mode to delete."
+            "description": "The id of the variable mode to delete. Modes cannot be deleted on extended collections unless its parent mode has been deleted."
           }
         },
         "required": ["action", "id"]
@@ -9517,7 +9577,7 @@
         "required": ["variableId", "modeId", "value"]
       },
       "VariableValue": {
-        "description": "The value for the variable. The value must match the variable's type. If setting to a variable alias, the alias must resolve to this type.",
+        "description": "The value for the variable. The value must match the variable's type. If setting to a variable alias, the alias must resolve to this type. If overriding a value, the value type must match the variable's type. If removing an overridden value, the value must be `null`.",
         "oneOf": [
           {
             "type": "boolean"
@@ -9536,6 +9596,9 @@
           },
           {
             "$ref": "#/components/schemas/VariableAlias"
+          },
+          {
+            "type": "null"
           }
         ]
       },
