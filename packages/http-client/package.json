@@ -37,14 +37,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --minify --dts --format esm",
+    "build": "tsdown src/index.ts --minify --dts --format esm",
     "dev": "tsc --watch",
     "test": "vitest --run",
     "lint-publint": "publint"
   },
   "devDependencies": {
     "@zemd/tsconfig": "catalog:",
-    "tsup": "catalog:",
+    "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
