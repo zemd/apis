@@ -29,25 +29,24 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     },
     "./package.json": "./package.json",
     "./openapi.json": "./dist/openapi.json"
   },
-  "module": "./dist/index.js",
-  "types": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsdown src/index.ts --minify --dts --format esm && cp ./src/openapi.json ./dist/openapi.json",
+    "build": "tsdown src/index.ts --minify --dts --format esm --external @figma/rest-api-spec && cp ./src/openapi.json ./dist/openapi.json",
     "dev": "tsc --watch",
     "generate-api": "bun ./scripts/generate-api.ts",
     "lint-publint": "publint"
   },
   "devDependencies": {
-    "@figma/rest-api-spec": "^0.36.0",
     "@types/node": "^25.3.0",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
@@ -58,6 +57,7 @@
     "yaml": "^2.8.2"
   },
   "dependencies": {
+    "@figma/rest-api-spec": "^0.36.0",
     "@zemd/http-client": "workspace:*"
   }
 }

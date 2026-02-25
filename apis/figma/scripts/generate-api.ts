@@ -1,13 +1,12 @@
 import { parse } from "yaml";
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 import type { OperationObject, ParameterObject, PathItemObject, PathsObject, Schema } from "@zemd/openapi";
 import { Project, VariableDeclarationKind } from "ts-morph";
 import { camelCase, pascalCase } from "change-case";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = import.meta.dirname;
 
 const buildPathArguments = (pathParams: { name: string; origName: string; type: string }[]) => {
   return pathParams.reduce((acc: string, param: any) => {
