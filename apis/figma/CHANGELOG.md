@@ -1,5 +1,11 @@
 # @zemd/figma-rest-api
 
+## 3.0.20
+
+### Patch Changes
+
+- 779f44a: Update figma api spec
+
 ## 3.0.19
 
 ### Patch Changes
