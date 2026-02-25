@@ -59,13 +59,13 @@ importers:
 
   apis/figma:
     dependencies:
+      "@figma/rest-api-spec":
+        specifier: ^0.36.0
+        version: 0.36.0
       "@zemd/http-client":
         specifier: workspace:*
         version: link:../../packages/http-client
     devDependencies:
-      "@figma/rest-api-spec":
-        specifier: ^0.36.0
-        version: 0.36.0
       "@types/node":
         specifier: ^25.3.0
         version: 25.3.0
