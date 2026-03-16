@@ -47,7 +47,7 @@
     "lint-publint": "publint"
   },
   "devDependencies": {
-    "@types/node": "^25.3.3",
+    "@types/node": "^25.5.0",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
     "change-case": "^5.4.4",
