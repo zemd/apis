@@ -41,7 +41,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsdown src/index.ts --minify --dts --format esm --external @figma/rest-api-spec && cp ./src/openapi.json ./dist/openapi.json",
+    "build": "tsdown src/index.ts --minify --dts --format esm --deps.neverBundle @figma/rest-api-spec && cp ./src/openapi.json ./dist/openapi.json",
     "dev": "tsc --watch",
     "generate-api": "bun ./scripts/generate-api.ts",
     "lint-publint": "publint"
