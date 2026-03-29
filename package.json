@@ -16,14 +16,14 @@
     "lint-publint": "pnpm --filter \"./packages/*\" --filter \"./apis/*\" --no-bail run lint-publint"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.8",
-    "@zemd/eslint-ts": "^2.0.3",
-    "@zemd/tsconfig": "^1.5.0",
-    "eslint": "^10.0.1",
-    "husky": "^9.1.7",
-    "prettier": "^3.8.1",
-    "publint": "^0.3.18",
-    "turbo": "^2.8.12"
+    "@changesets/cli": "2.30.0",
+    "@zemd/eslint-ts": "3.0.0",
+    "@zemd/tsconfig": "1.6.0",
+    "eslint": "10.1.0",
+    "husky": "9.1.7",
+    "prettier": "3.8.1",
+    "publint": "0.3.18",
+    "turbo": "2.8.21"
   },
   "engines": {
     "node": ">=22"
