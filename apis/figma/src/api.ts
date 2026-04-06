@@ -114,6 +114,8 @@ import type {
   GetLibraryAnalyticsVariableUsagesResponse,
   GetLibraryAnalyticsVariableUsagesPathParams,
   GetLibraryAnalyticsVariableUsagesQueryParams,
+  GetOEmbedResponse,
+  GetOEmbedQueryParams,
 } from "@figma/rest-api-spec";
 
 export const figma = (initialTransformers: TFetchTransformer[]) => {
@@ -389,6 +391,11 @@ export const figma = (initialTransformers: TFetchTransformer[]) => {
             `/v1/analytics/libraries/${fileKey}/variable/usages`,
             [method("GET"), query(options)],
           );
+        },
+      },
+      oembed: {
+        getOEmbed: async (options: GetOEmbedQueryParams) => {
+          return endpoint<GetOEmbedResponse>(`/v1/oembed`, [method("GET"), query(options)]);
         },
       },
     },
