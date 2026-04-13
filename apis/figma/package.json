@@ -47,11 +47,11 @@
     "lint-publint": "publint"
   },
   "devDependencies": {
-    "@types/node": "25.5.2",
+    "@types/node": "25.6.0",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
     "change-case": "5.4.4",
-    "ts-morph": "27.0.2",
+    "ts-morph": "28.0.0",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "yaml": "2.8.3"
