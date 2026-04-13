@@ -17,13 +17,13 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.30.0",
-    "@zemd/eslint-ts": "3.0.1",
+    "@zemd/eslint-ts": "3.0.2",
     "@zemd/tsconfig": "1.6.0",
     "eslint": "10.2.0",
     "husky": "9.1.7",
-    "prettier": "3.8.1",
+    "prettier": "3.8.2",
     "publint": "0.3.18",
-    "turbo": "2.9.4"
+    "turbo": "2.9.6"
   },
   "engines": {
     "node": ">=22"
