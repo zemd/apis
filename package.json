@@ -19,11 +19,11 @@
     "@changesets/cli": "2.31.0",
     "@zemd/eslint-ts": "3.0.2",
     "@zemd/tsconfig": "1.6.0",
-    "eslint": "10.2.1",
+    "eslint": "10.3.0",
     "husky": "9.1.7",
     "prettier": "3.8.3",
     "publint": "0.3.18",
-    "turbo": "2.9.6"
+    "turbo": "2.9.8"
   },
   "engines": {
     "node": ">=22"
