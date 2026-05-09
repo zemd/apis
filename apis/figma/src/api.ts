@@ -78,6 +78,8 @@ import type {
   GetWebhookRequestsPathParams,
   GetActivityLogsResponse,
   GetActivityLogsQueryParams,
+  GetDeveloperLogsResponse,
+  GetDeveloperLogsRequestBody,
   GetPaymentsResponse,
   GetPaymentsQueryParams,
   GetLocalVariablesResponse,
@@ -318,6 +320,11 @@ export const figma = (initialTransformers: TFetchTransformer[]) => {
             transformers.push(query(options));
           }
           return endpoint<GetActivityLogsResponse>(`/v1/activity_logs`, transformers);
+        },
+      },
+      developer_logs: {
+        getDeveloperLogs: async (obj: GetDeveloperLogsRequestBody) => {
+          return endpoint<GetDeveloperLogsResponse>(`/v1/developer_logs`, [method("POST"), body(JSON.stringify(obj))]);
         },
       },
       payments: {

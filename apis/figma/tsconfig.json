@@ -10,7 +10,8 @@
     "target": "ES2022",
     "sourceMap": false,
     "declarationMap": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "isolatedDeclarations": false
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]

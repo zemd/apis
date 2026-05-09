@@ -10,7 +10,8 @@
     "target": "ES2022",
     "sourceMap": false,
     "declarationMap": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "isolatedDeclarations": false
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
