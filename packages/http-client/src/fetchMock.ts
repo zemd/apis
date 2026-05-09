@@ -14,6 +14,7 @@ const getUrl = (url: TFetchFnParams[0]) => {
 
 const getKey = (pathname: string, method: string): string => {
   for (const key of mockRegistry.keys()) {
+    // eslint-disable-next-line no-useless-escape
     if (new RegExp(`^${key}$`).test(`${method}\.${pathname}`)) {
       return key;
     }
@@ -41,7 +42,7 @@ export const fetchMock = async (url: TFetchFnParams[0], options?: TFetchFnParams
 
   const implementation =
     mockRegistry.get(getKey(`${urlObj.origin}${urlObj.pathname}`, method)) ??
-    mockRegistry.get(getKey(`${urlObj.pathname}`, method));
+    mockRegistry.get(getKey(urlObj.pathname, method));
 
   if (implementation) {
     try {
@@ -50,16 +51,20 @@ export const fetchMock = async (url: TFetchFnParams[0], options?: TFetchFnParams
         return result;
       }
 
-      return new Response(JSON.stringify(result), {
+      return Response.json(result, {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       console.error(`Error in mock implementation for the URL: ${url.toString()}`, error);
-      return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
+      return Response.json(
+        { error: "Internal Server Error" },
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
   }
 

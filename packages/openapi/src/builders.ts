@@ -13,7 +13,7 @@ type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[k
 
 const toJSON = <Res>(value: unknown): Res => {
   if (value instanceof Builder) {
-    return value.toJSON() as unknown as Res;
+    return value.toJSON();
   }
   if (Array.isArray(value)) {
     return value.map((val) => {

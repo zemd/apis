@@ -2,20 +2,37 @@ import { parse } from "yaml";
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
-import type { OperationObject, ParameterObject, PathItemObject, PathsObject, Schema } from "@zemd/openapi";
+import type { OperationObject, ParameterObject, PathItemObject, Schema } from "@zemd/openapi";
 import { Project, VariableDeclarationKind } from "ts-morph";
 import { camelCase, pascalCase } from "change-case";
 
 const __dirname = import.meta.dirname;
 
-const buildPathArguments = (pathParams: { name: string; origName: string; type: string }[]) => {
-  return pathParams.reduce((acc: string, param: any) => {
-    const arg = `${param.name}: ${param.type}`;
-    if (acc) {
-      return `${acc}, ${arg}`;
-    }
-    return arg;
-  }, "");
+interface PathParam {
+  origName: string;
+  name: string;
+  type: string;
+}
+
+interface Operation {
+  method: string;
+  operationId: string;
+  path: string;
+  pathTemplate: string;
+  version: string;
+  namespace: string;
+  pathParams: PathParam[];
+  queryParams: { type: string; required: boolean } | null;
+  bodyParams: { type: string } | null;
+  returnType: string;
+}
+
+const buildPathArguments = (pathParams: PathParam[]) => {
+  return pathParams
+    .map((p) => {
+      return `${p.name}: ${p.type}`;
+    })
+    .join(", ");
 };
 
 async function generateApi(data: Schema) {
@@ -35,19 +52,45 @@ async function generateApi(data: Schema) {
     isTypeOnly: true,
   });
 
+  if (!data.paths) {
+    throw new Error("OpenAPI spec has no paths");
+  }
+  const apiServerUrl = data.servers?.at(0)?.url;
+  if (!apiServerUrl) {
+    throw new Error("OpenAPI spec has no server URL");
+  }
+
   const versionSet = new Set<string>();
   const namespaceMap = new Map<string, Set<string>>();
-  const operations: any[] = [];
+  const operations: Operation[] = [];
   const namedImports = new Set<string>();
-  const apiServerUrl = data.servers?.at(0)?.url;
 
-  for (const [path, methods] of Object.entries(data.paths as PathsObject)) {
-    for (const [method, props] of Object.entries(methods as PathItemObject)) {
-      const [, version, namespace] = path.split("/") as [undefined, string, string, ...string[]];
+  for (const [path, methods] of Object.entries(data.paths)) {
+    for (const [httpMethod, props] of Object.entries(methods as PathItemObject)) {
+      const segments = path.split("/");
+      const version = segments[1];
+      const namespace = segments[2];
+      if (!version || !namespace) {
+        throw new Error(`Unexpected path format: ${path}`);
+      }
 
-      const operationId = (props as OperationObject).operationId;
-      const returnType = pascalCase(`${operationId}Response`);
-      const parameters = (props as OperationObject).parameters as ParameterObject[] | undefined;
+      const { operationId, parameters: rawParameters, requestBody, responses } = props as OperationObject;
+      if (!operationId) {
+        throw new Error(`Missing operationId for ${httpMethod.toUpperCase()} ${path}`);
+      }
+
+      const successResponse = responses?.["200"];
+      let returnType: string;
+      if (successResponse && "$ref" in successResponse) {
+        const refName = successResponse.$ref.split("/").at(-1);
+        if (!refName) {
+          throw new Error(`Invalid $ref for 200 response in ${httpMethod.toUpperCase()} ${path}`);
+        }
+        returnType = refName;
+      } else {
+        returnType = pascalCase(`${operationId}Response`);
+      }
+      const parameters = rawParameters as ParameterObject[] | undefined;
 
       versionSet.add(version);
       namespaceMap.set(version, (namespaceMap.get(version) ?? new Set()).add(namespace));
@@ -59,14 +102,14 @@ async function generateApi(data: Schema) {
             return param.in === "path";
           })
           .map((param) => {
-            const name = param.name;
-            const type = `${pascalCase(operationId ?? "")}PathParams`;
+            const name = param.name ?? "";
+            const type = `${pascalCase(operationId)}PathParams`;
 
             namedImports.add(type);
 
             return {
               origName: name,
-              name: camelCase(name ?? ""),
+              name: camelCase(name),
               type: `${type}["${name}"]`,
             };
           }) ?? [];
@@ -82,7 +125,7 @@ async function generateApi(data: Schema) {
         }) ?? ([] as ParameterObject[]);
 
       if (allQueryParams.length > 0) {
-        const type = `${pascalCase(operationId ?? "")}QueryParams`;
+        const type = `${pascalCase(operationId)}QueryParams`;
 
         namedImports.add(type);
 
@@ -95,17 +138,16 @@ async function generateApi(data: Schema) {
       }
 
       let bodyParams = null;
-      const requestBody = (props as OperationObject).requestBody;
       if (requestBody) {
-        namedImports.add(`${pascalCase(operationId ?? "")}RequestBody`);
+        namedImports.add(`${pascalCase(operationId)}RequestBody`);
 
         bodyParams = {
-          type: `${pascalCase(operationId ?? "")}RequestBody`,
+          type: `${pascalCase(operationId)}RequestBody`,
         };
       }
 
       operations.push({
-        method,
+        method: httpMethod,
         operationId,
         path,
         pathTemplate,
@@ -153,12 +195,12 @@ async function generateApi(data: Schema) {
                       .filter(Boolean)
                       .join(", ");
 
-                    const optionalTransformers: boolean = operation?.queryParams && !operation.queryParams.required;
+                    const queryIsOptional: boolean = !!operation.queryParams && !operation.queryParams.required;
 
                     let requiredTransformers = [
                       `method("${operation.method.toUpperCase()}")`,
                       operation.bodyParams && `body(JSON.stringify(obj))`,
-                      operation?.queryParams && operation.queryParams.required && `query(options)`,
+                      operation.queryParams && operation.queryParams.required && `query(options)`,
                     ]
                       .filter(Boolean)
                       .join(",");
@@ -166,7 +208,7 @@ async function generateApi(data: Schema) {
 
                     writer.write(`${operation.operationId}: async (${funcArguments}) => `).indent();
                     writer.block(() => {
-                      if (optionalTransformers) {
+                      if (queryIsOptional) {
                         writer.write(`const transformers = ${requiredTransformers};`).indent();
                         writer.write(`if (options) { transformers.push(query(options)); }`).indent();
                         requiredTransformers = "transformers";
@@ -199,6 +241,7 @@ async function generateApi(data: Schema) {
     namedImports: [...namedImports],
   });
 
+  sourceFile.organizeImports();
   await sourceFile.save();
   console.log("Source file generated successfully");
 }

@@ -85,7 +85,10 @@ describe("fetchMock", () => {
   });
 
   it("matches endpoints using regex-like patterns", async () => {
-    addEndpointMock("/test/regex/\\d+", "GET", () => ({ regex: true }));
+    // eslint-disable-next-line unicorn/prefer-string-raw
+    addEndpointMock("/test/regex/\\d+", "GET", () => {
+      return { regex: true };
+    });
 
     const url = "https://example.com/test/regex/123";
     const response = await fetchMock(url, { method: "GET" });
@@ -95,7 +98,9 @@ describe("fetchMock", () => {
   });
 
   it("matches endpoints that include full URL", async () => {
-    addEndpointMock("https://example.com/test/full/url", "GET", () => ({ success: true }));
+    addEndpointMock("https://example.com/test/full/url", "GET", () => {
+      return { success: true };
+    });
 
     const url = "https://example.com/test/full/url";
     const response = await fetchMock(url, { method: "GET" });

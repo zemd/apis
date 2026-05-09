@@ -13,7 +13,9 @@ describe("createEndpoint", () => {
   describe("with json parsing", () => {
     it("should create endpoint that returns parsed JSON response", async () => {
       const mockData = { message: "success", data: [1, 2, 3] };
-      addEndpointMock("/api/test", "GET", () => mockData);
+      addEndpointMock("/api/test", "GET", () => {
+        return mockData;
+      });
 
       const endpoint = createEndpoint([json(), prefix("https://example.com")], { parseResponse: "json" }, fetchMock);
       const result = await endpoint<typeof mockData>("/api/test", []);
@@ -23,13 +25,16 @@ describe("createEndpoint", () => {
 
     it("should apply transformers before making request", async () => {
       const mockData = { success: true };
-      addEndpointMock("/api/transformed", "POST", () => mockData);
+      addEndpointMock("/api/transformed", "POST", () => {
+        return mockData;
+      });
 
-      const methodTransformer: TFetchTransformer = (fetchFn, url, options) => {
+      const methodTransformer: TFetchTransformer = async (fetchFn, url, options) => {
         return fetchFn(url, { ...options, method: "POST" });
       };
 
-      const headerTransformer: TFetchTransformer = (fetchFn, url, options) => {
+      const headerTransformer: TFetchTransformer = async (fetchFn, url, options) => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread
         return fetchFn(url, { ...options, headers: { ...options?.headers, "Content-Type": "application/json" } });
       };
 
@@ -44,7 +49,9 @@ describe("createEndpoint", () => {
     });
 
     it("should throw error for non-ok responses", async () => {
-      addEndpointMock("/api/error", "GET", () => new Response("Not Found", { status: 404 }));
+      addEndpointMock("/api/error", "GET", () => {
+        return new Response("Not Found", { status: 404 });
+      });
 
       const endpoint = createEndpoint([json(), prefix("https://example.com")], { parseResponse: "json" }, fetchMock);
 
@@ -55,14 +62,11 @@ describe("createEndpoint", () => {
   describe("with text parsing", () => {
     it("should create endpoint that returns text response", async () => {
       const textData = "Hello, World!";
-      addEndpointMock(
-        "/api/text",
-        "GET",
-        () =>
-          new Response(textData, {
-            headers: { "Content-Type": "text/plain" },
-          }),
-      );
+      addEndpointMock("/api/text", "GET", () => {
+        return new Response(textData, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      });
 
       const endpoint = createEndpoint([prefix("https://example.com")], { parseResponse: "text" }, fetchMock);
       const result = await endpoint<string>("/api/text", []);
@@ -73,14 +77,19 @@ describe("createEndpoint", () => {
 
   describe("with no parsing", () => {
     it("should return raw Response object", async () => {
-      const responseData = new Response(JSON.stringify({ test: true }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
+      const responseData = Response.json(
+        { test: true },
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+      addEndpointMock("/api/raw", "GET", () => {
+        return responseData;
       });
-      addEndpointMock("/api/raw", "GET", () => responseData);
 
       const endpoint = createEndpoint([prefix("https://example.com")], { parseResponse: false }, fetchMock);
-      const result = await endpoint<Response>("/api/raw", []);
+      const result = await endpoint("/api/raw", []);
 
       expect(result).toBeInstanceOf(Response);
       expect(result.status).toBe(200);
@@ -90,7 +99,9 @@ describe("createEndpoint", () => {
   describe("error handling", () => {
     it("should include response in error cause for non-ok responses", async () => {
       const errorResponse = new Response("Server Error", { status: 500 });
-      addEndpointMock("/api/server-error", "GET", () => errorResponse);
+      addEndpointMock("/api/server-error", "GET", () => {
+        return errorResponse;
+      });
 
       const endpoint = createEndpoint([json(), prefix("https://example.com")], { parseResponse: "json" }, fetchMock);
 
@@ -104,20 +115,18 @@ describe("createEndpoint", () => {
           error.cause !== null &&
           "response" in error.cause
         ) {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           expect(error.cause?.response).toBe(errorResponse);
         }
       }
     });
 
     it("should handle JSON parsing errors gracefully", async () => {
-      addEndpointMock(
-        "/api/invalid-json",
-        "GET",
-        () =>
-          new Response("invalid json{", {
-            headers: { "Content-Type": "application/json" },
-          }),
-      );
+      addEndpointMock("/api/invalid-json", "GET", () => {
+        return new Response("invalid json{", {
+          headers: { "Content-Type": "application/json" },
+        });
+      });
 
       const endpoint = createEndpoint([json(), prefix("https://example.com")], { parseResponse: "json" }, fetchMock);
 
@@ -128,12 +137,14 @@ describe("createEndpoint", () => {
   describe("transformer combination", () => {
     it("should combine base transformers with endpoint transformers", async () => {
       const mockData = { combined: true };
-      addEndpointMock("/api/combined", "PUT", () => mockData);
+      addEndpointMock("/api/combined", "PUT", () => {
+        return mockData;
+      });
 
-      const baseTransformer: TFetchTransformer = (fetchFn, url, options) => {
+      const baseTransformer: TFetchTransformer = async (fetchFn, url, options) => {
         return fetchFn(url, { ...options, method: "PUT" });
       };
-      const endpointTransformer: TFetchTransformer = (fetchFn, url, options) => {
+      const endpointTransformer: TFetchTransformer = async (fetchFn, url, options) => {
         return fetchFn(url, { ...options, headers: { Authorization: "Bearer token" } });
       };
 
@@ -151,7 +162,9 @@ describe("createEndpoint", () => {
   describe("default options", () => {
     it("should use json parsing by default", async () => {
       const mockData = { default: true };
-      addEndpointMock("/api/default", "GET", () => mockData);
+      addEndpointMock("/api/default", "GET", () => {
+        return mockData;
+      });
 
       const endpoint = createEndpoint([json(), prefix("https://example.com")], undefined, fetchMock);
       const result = await endpoint<typeof mockData>("/api/default", []);
@@ -161,12 +174,15 @@ describe("createEndpoint", () => {
 
     it("should use global fetch by default when no fetchFn provided", async () => {
       const globalFetch = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ global: true }), {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        }),
+        Response.json(
+          { global: true },
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        ),
       );
-      global.fetch = globalFetch;
+      globalThis.fetch = globalFetch;
 
       const endpoint = createEndpoint([]);
       const result = await endpoint<{ global: boolean }>("https://api.example.com/test", []);
@@ -178,14 +194,19 @@ describe("createEndpoint", () => {
 
   describe("with no parsing", () => {
     it("should return raw Response object", async () => {
-      const responseData = new Response(JSON.stringify({ test: true }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
+      const responseData = Response.json(
+        { test: true },
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+      addEndpointMock("/raw", "GET", () => {
+        return responseData;
       });
-      addEndpointMock("/raw", "GET", () => responseData);
 
       const endpoint = createEndpoint([prefix("https://example.com")], { parseResponse: false }, fetchMock);
-      const result = await endpoint<Response>("/raw", []);
+      const result = await endpoint("/raw", []);
 
       expect(result).toBeInstanceOf(Response);
       expect(result.status).toBe(200);
@@ -193,7 +214,9 @@ describe("createEndpoint", () => {
 
     it("should return Response object for 204 No Content regardless of parseResponse option", async () => {
       const noContentResponse = new Response(null, { status: 204 });
-      addEndpointMock("/no-content", "DELETE", () => noContentResponse);
+      addEndpointMock("/no-content", "DELETE", () => {
+        return noContentResponse;
+      });
 
       const jsonEndpoint = createEndpoint(
         [prefix("https://example.com"), method("DELETE")],
@@ -211,9 +234,9 @@ describe("createEndpoint", () => {
         fetchMock,
       );
 
-      const jsonResult = await jsonEndpoint<Response>("/no-content", []);
-      const textResult = await textEndpoint<Response>("/no-content", []);
-      const rawResult = await rawEndpoint<Response>("/no-content", []);
+      const jsonResult = await jsonEndpoint("/no-content", []);
+      const textResult = await textEndpoint("/no-content", []);
+      const rawResult = await rawEndpoint("/no-content", []);
 
       expect(jsonResult).toBeInstanceOf(Response);
       expect(jsonResult.status).toBe(204);

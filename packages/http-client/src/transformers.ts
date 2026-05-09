@@ -204,13 +204,13 @@ export const cache = (maxAge: number = 60_000): TFetchTransformer => {
     const cached = cacheStore.get(cacheKey);
 
     if (cached && Date.now() - cached.timestamp < maxAge) {
-      return new Response(JSON.stringify(cached.data), { status: 200 });
+      return Response.json(cached.data, { status: 200 });
     }
 
     const response = await fetchFn(...params);
     const data = await response.json();
     cacheStore.set(cacheKey, { data, timestamp: Date.now() });
-    return new Response(JSON.stringify(data), { status: 200 });
+    return Response.json(data, { status: 200 });
   };
 };
 

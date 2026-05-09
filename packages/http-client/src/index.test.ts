@@ -6,9 +6,12 @@ describe("HTTP Client", () => {
 
   beforeEach(() => {
     mockFetch = vi.fn(async (): Promise<Response> => {
-      return new Response(JSON.stringify({ data: "test" }), {
-        headers: { "Content-Type": "application/json" },
-      });
+      return Response.json(
+        { data: "test" },
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     });
     globalThis.fetch = mockFetch;
   });
