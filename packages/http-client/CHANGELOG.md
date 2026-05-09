@@ -1,5 +1,11 @@
 # @zemd/http-client
 
+## 4.0.7
+
+### Patch Changes
+
+- 9db831d: Update dependencies
+
 ## 4.0.6
 
 ### Patch Changes
