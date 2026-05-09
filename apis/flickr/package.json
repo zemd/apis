@@ -1,7 +1,7 @@
 {
   "name": "@zemd/flickr-rest-api",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "Apache-2.0",
   "description": "Flickr API client simplified.",
   "author": {
@@ -38,7 +38,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@zemd/http-client": "3.0.0",
+    "@zemd/http-client": "4.0.7",
     "zod": "catalog:"
   }
 }
