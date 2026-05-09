@@ -1,5 +1,11 @@
 # @zemd/flickr-rest-api
 
+## 1.0.3
+
+### Patch Changes
+
+- 4734f88: Update dependencies
+
 ## 1.0.2
 
 ### Patch Changes
