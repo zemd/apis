@@ -47,14 +47,14 @@
     "lint-publint": "publint"
   },
   "devDependencies": {
-    "@types/node": "25.6.2",
+    "@types/node": "25.9.0",
     "@zemd/openapi": "workspace:*",
     "@zemd/tsconfig": "catalog:",
     "change-case": "5.4.4",
     "ts-morph": "28.0.0",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "yaml": "2.8.4"
+    "yaml": "2.9.0"
   },
   "dependencies": {
     "@figma/rest-api-spec": "0.38.0",
